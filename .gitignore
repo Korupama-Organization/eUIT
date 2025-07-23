@@ -1,0 +1,46 @@
+# Ignore build outputs
+bin/
+obj/
+
+# Ignore user-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore Visual Studio Code settings
+.vscode/
+
+# Ignore environment files
+.env
+
+# Ignore logs
+*.log
+
+# Ignore Docker artifacts
+docker-compose.override.yml
+docker-compose.*
+*.db
+
+# Ignore EF Core migrations snapshots
+Migrations/
+
+# Ignore node_modules for mobile frontend
+node_modules/
+
+# Ignore Flutter build outputs
+build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+pubspec.lock
+
+# Ignore React Native artifacts
+.expo/
+*.expo
+*.keystore
+
+# Ignore coverage reports
+coverage/
+TestResults/
+.fake
