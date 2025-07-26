@@ -129,21 +129,25 @@ CREATE TABLE giang_vien
 	-- Cac thong tin khac ve giang vien co the them vao sau
 )
 
-CREATE TABLE thoi_khoa_bieu
+
+CREATE TABLE thoi_khoa_bieu 
 (
-	hoc_ky char(11) NOT NULL, --Vi du: 2023-2024_1
-	ma_mon_hoc char(8) NOT NULL, --Vi du: IT001
-	ma_lop char(20) PRIMARY KEY, --Vi du: IT001.P11.CNVN
-	so_tin_chi int NOT NULL,
-	ma_giang_vien char(5) NOT NULL, --Vi du: 80001
-	thu char(2) NOT NULL, --Thu 2, Thu 3, ...
-	tiet_bat_dau int NOT NULL, --Tiet bat dau cua lop hoc
-	tiet_ket_thuc int NOT NULL, --Tiet ket thuc cua lop hoc
-	ngay_bat_dau DATE NOT NULL, --Ngay bat dau lop hoc
-	ngay_ket_thuc DATE NOT NULL, --Ngay ket thuc lop hoc
-	phong_hoc varchar(10) NOT NULL, --Vi du: A101
-	si_so int NOT NULL DEFAULT 0, --Si so lop hoc
-	ghi_chu VARCHAR(255); --Ghi chu ve lop hoc
+	hoc_ky char(11), --Vi du: 2023-2024_1
+	ma_mon_hoc char(8), --Vi du: IT001
+	ma_lop char(20), --Vi du: IT001.P11.CNVN
+	so_tin_chi int,
+	ma_giang_vien char(5), --Vi du: 80001
+	thu char(2), --Thu 2, Thu 3, ...
+	tiet_bat_dau int, --Tiet bat dau cua lop hoc
+	tiet_ket_thuc int, --Tiet ket thuc cua lop hoc
+	cach_tuan int, --Cach tuan cua lop hoc (1: moi tuan, 2: cach 2 tuan, ...)
+	ngay_bat_dau DATE, --Ngay bat dau lop hoc
+	ngay_ket_thuc DATE , --Ngay ket thuc lop hoc
+	phong_hoc varchar(10), --Vi du: A101
+	si_so int, --Si so lop hoc
+	hinh_thuc_giang_day char(5), --Hinh thuc giang day (Ly thuyet:LT, DA, TTTN, KLTN; Thuc hanh: HT1, HT2, ...)
+	ghi_chu VARCHAR(255), --Ghi chu ve lop hoc
+	PRIMARY KEY (ma_lop, ma_giang_vien),
 	FOREIGN KEY (ma_mon_hoc) REFERENCES mon_hoc(ma_mon_hoc),
 	FOREIGN KEY (ma_giang_vien) REFERENCES giang_vien(ma_giang_vien)
 )
@@ -152,16 +156,17 @@ CREATE TABLE thoi_khoa_bieu
 CREATE TABLE ket_qua_hoc_tap
 (
 	ma_lop char(20) NOT NULL, --Vi du: IT001.P11.CNVN
+	ma_giang_vien char(5), --Vi du: 80001
 	mssv int NOT NULL,
-	diem_qua_trinh NUMERIC(4,2) NOT NULL,
-	diem_giua_ki NUMERIC(4,2) NOT NULL,
-	diem_thuc_hanh NUMERIC(4,2) NOT NULL,
-	diem_cuoi_ki NUMERIC(4,2) NOT NULL,
-	diem_tong_ket NUMERIC(4,2) NOT NULL,
+	diem_qua_trinh NUMERIC(4,2),
+	diem_giua_ki NUMERIC(4,2) ,
+	diem_thuc_hanh NUMERIC(4,2),
+	diem_cuoi_ki NUMERIC(4,2),
+	diem_tong_ket NUMERIC(4,2),
 	ghi_chu VARCHAR(20),
 	PRIMARY KEY (ma_lop, mssv), 
 	FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv),
-	FOREIGN KEY (ma_lop) REFERENCES thoi_khoa_bieu(ma_lop)
+	FOREIGN KEY (ma_lop,ma_giang_vien) REFERENCES thoi_khoa_bieu(ma_lop, ma_giang_vien)
 )
 
 CREATE TABLE hoc_phi
@@ -191,7 +196,7 @@ CREATE TABLE dang_ky_gui_xe
 	FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv)	
 )
 
-CREATE  TABLE xac_nhan_chung_chi
+CREATE TABLE xac_nhan_chung_chi
 (
 	mssv INT NOT NULL, -- Ma so sinh vien
 	ma_chung_chi VARCHAR(20) NOT NULL, -- Ma chung chi
@@ -217,10 +222,11 @@ CREATE TABLE bao_nghi_day
 (
 	id SERIAL PRIMARY KEY, -- Ma so bao nghi
 	ma_lop char(20) NOT NULL, -- Ma lop hoc
-	ly_do VARCHAR(200) NOT NULL, -- Ly do bao nghi
-	ngay_nghi DATE NOT NULL, -- Ngay bao nghi
-	tinh_trang VARCHAR(20) NOT NULL, -- Tinh trang bao nghi (Da duyet, Chua duyet)
-	FOREIGN KEY (ma_lop) REFERENCES thoi_khoa_bieu(ma_lop)
+	ma_giang_vien char(5), -- Vi du: 80001
+	ly_do VARCHAR(200), -- Ly do bao nghi
+	ngay_nghi DATE, -- Ngay bao nghi
+	tinh_trang VARCHAR(20), -- Tinh trang bao nghi (Da duyet, Cho duyet)
+	FOREIGN KEY (ma_lop, ma_giang_vien) REFERENCES thoi_khoa_bieu(ma_lop, ma_giang_vien)
 );
 
 CREATE TABLE bao_hoc_bu
@@ -235,10 +241,11 @@ CREATE TABLE bao_hoc_bu
 	FOREIGN KEY (ma_lop) REFERENCES thoi_khoa_bieu(ma_lop)
 );
 
-CREATE TABLE lich_thi
+CREATE TABLE lich_thi 
 (
 	ma_mon_hoc char(8) NOT NULL, -- Ma mon hoc
 	ma_lop char(20) NOT NULL, -- Ma lop hoc
+	ma_giang_vien char(5), -- Ma giang vien, co the bo trong neu khong co
 	ngay_thi DATE NOT NULL, -- Ngay thi
 	ca_thi int NOT NULL, -- Ca thi (1, 2, 3, 4)
 	phong_thi varchar(10) NOT NULL, -- Phong thi
@@ -248,7 +255,7 @@ CREATE TABLE lich_thi
 	
 	PRIMARY KEY (ma_lop, phong_thi),
 	FOREIGN KEY (ma_mon_hoc) REFERENCES mon_hoc(ma_mon_hoc),
-	FOREIGN KEY (ma_lop) REFERENCES thoi_khoa_bieu(ma_lop)
+	FOREIGN KEY (ma_lop, ma_giang_vien) REFERENCES thoi_khoa_bieu(ma_lop, ma_giang_vien)
 );
 
 CREATE TABLE coi_thi
