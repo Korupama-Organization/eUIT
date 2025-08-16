@@ -1,4 +1,4 @@
-
+language plpgsql;-- This script creates the eUIT database and its initial tables for managing student information, courses, and
 --DROP DATABASE IF EXISTS "eUIT";
 
 
@@ -153,21 +153,30 @@ CREATE TABLE thoi_khoa_bieu
 )
 
 
-CREATE TABLE ket_qua_hoc_tap
-(
-	ma_lop char(20) NOT NULL, --Vi du: IT001.P11.CNVN
-	ma_giang_vien char(5), --Vi du: 80001
-	mssv int NOT NULL,
-	diem_qua_trinh NUMERIC(4,2),
-	diem_giua_ki NUMERIC(4,2) ,
-	diem_thuc_hanh NUMERIC(4,2),
-	diem_cuoi_ki NUMERIC(4,2),
-	diem_tong_ket NUMERIC(4,2),
-	ghi_chu VARCHAR(20),
-	PRIMARY KEY (ma_lop, mssv), 
-	FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv),
-	FOREIGN KEY (ma_lop,ma_giang_vien) REFERENCES thoi_khoa_bieu(ma_lop, ma_giang_vien)
-)
+CREATE TABLE bang_diem (
+    ma_lop CHAR(20) PRIMARY KEY,              -- Ví dụ: IT001.P11.CNVN
+    ma_giang_vien CHAR(5),                 -- Ví dụ: 80001
+    trong_so_qua_trinh INT,               -- Ví dụ: 10%
+    trong_so_giua_ki INT,                 -- Ví dụ: 30%
+    trong_so_thuc_hanh INT,               -- Ví dụ: 20%
+    trong_so_cuoi_ki INT,                 -- Ví dụ: 40%
+    FOREIGN KEY (ma_lop, ma_giang_vien) REFERENCES thoi_khoa_bieu(ma_lop, ma_giang_vien)
+);
+
+CREATE TABLE ket_qua_hoc_tap (
+    ma_lop CHAR(20) NOT NULL,
+    mssv INT NOT NULL,
+    diem_qua_trinh NUMERIC(4,2),
+    diem_giua_ki NUMERIC(4,2),
+    diem_thuc_hanh NUMERIC(4,2),
+    diem_cuoi_ki NUMERIC(4,2),
+    diem_tong_ket NUMERIC(4,2), -- Sẽ được tính bằng trigger
+    ghi_chu VARCHAR(20),
+    PRIMARY KEY (ma_lop, mssv),
+    FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv),
+    FOREIGN KEY (ma_lop) REFERENCES bang_diem(ma_lop)
+);
+
 
 CREATE TABLE hoc_phi
 (
