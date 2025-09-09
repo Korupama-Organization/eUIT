@@ -80,3 +80,4 @@ yarn-error.*
 # Default ignored files
 /shelf/
 /workspace.xml
+appsettings.json
