@@ -78,34 +78,9 @@ CREATE TABLE sinh_vien
 
 	--Khi can bao tin cho ai? o dau
 	thong_tin_nguoi_can_bao_tin varchar(200) NOT NULL,
-	so_dien_thoai_bao_tin char(10) NOT NULL
+	so_dien_thoai_bao_tin char(10) NOT NULL,
 
-)
-
-
-
-CREATE TABLE mon_hoc
-(
-	ma_mon_hoc char(8) primary key,
-	ten_mon_hoc_vi varchar(255),
-	en_ten_mon_hoc varchar(255),
-	con_mo_lop char(5),
-	khoa_bo_mon_quan_ly char(5),
-	loai_mon_hoc char(4),
-	so_tc_ly_thuyet int,
-	so_tc_thuc_hanh int
-)
-
-
-CREATE TABLE dieu_kien_mon_hoc
-(
-	ma_mon_hoc char(8) NOT NULL,
-	ma_mon_hoc_dieu_kien char(8) NOT NULL,
-	--Dieu kien co the la mon hoc tien quyet, hoac mon hoc truoc
-	loai_dieu_kien varchar(10) NOT NULL,
-	PRIMARY KEY (ma_mon_hoc, ma_mon_hoc_dieu_kien),
-	FOREIGN KEY (ma_mon_hoc) REFERENCES mon_hoc(ma_mon_hoc),
-	FOREIGN KEY (ma_mon_hoc_dieu_kien) REFERENCES mon_hoc(ma_mon_hoc)
+	anh_the_url VARCHAR(255)
 )
 
 CREATE TABLE giang_vien
@@ -127,6 +102,32 @@ CREATE TABLE giang_vien
 	phuong_xa text NOT NULL
 
 	-- Cac thong tin khac ve giang vien co the them vao sau
+)
+
+
+CREATE TABLE mon_hoc
+(
+	ma_mon_hoc char(8) primary key,
+	ten_mon_hoc_vn varchar(255),
+	ten_mon_hoc_en varchar(255),
+	con_mo_lop char(5),
+	khoa_bo_mon_quan_ly char(5),
+	loai_mon_hoc char(4),
+	so_tc_ly_thuyet int,
+	so_tc_thuc_hanh int
+)
+ 
+
+
+CREATE TABLE dieu_kien_mon_hoc
+(
+	ma_mon_hoc char(8) NOT NULL,
+	ma_mon_hoc_dieu_kien char(8) NOT NULL,
+	--Dieu kien co the la mon hoc tien quyet, hoac mon hoc truoc
+	loai_dieu_kien varchar(10) NOT NULL,
+	PRIMARY KEY (ma_mon_hoc, ma_mon_hoc_dieu_kien),
+	FOREIGN KEY (ma_mon_hoc) REFERENCES mon_hoc(ma_mon_hoc),
+	FOREIGN KEY (ma_mon_hoc_dieu_kien) REFERENCES mon_hoc(ma_mon_hoc)
 )
 
 
@@ -182,14 +183,24 @@ CREATE TABLE hoc_phi
 (
 	mssv INT NOT NULL,
 	hoc_ky char(11) NOT NULL, --Vi du: 2023-2024_1
-	so_tin_chi int NOT NULL,
-	hoc_phi NUMERIC(12,2) NOT NULL, --So tien hoc phi can dong
-	no_hoc_ky_truoc float NOT NULL, --No hoc phi cua hoc ky truoc
-	da_dong float NOT NULL, --So tien da dong
-	so_tien_con_lai float NOT NULL, --So tien con lai can dong/con thua
+	so_tin_chi int ,
+	don_gia_tin_chi int , --Don gia cho 1 tin chi
+	hoc_phi NUMERIC(12,2) , --So tien hoc phi can dong
+	no_hoc_ky_truoc float , --No hoc phi cua hoc ky truoc
+	da_dong float , --So tien da dong
+	so_tien_con_lai float , --So tien con lai can dong/con thua
 	PRIMARY KEY (mssv, hoc_ky),
 	FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv)
 )
+-- Update so tien da dong
+UPDATE hoc_phi
+SET da_dong = 17000000.00
+WHERE mssv = '21520541' AND hoc_ky = '2022_2023_1';
+
+-- Update so tien da dong
+UPDATE hoc_phi
+SET hoc_phi = 17000000.00
+WHERE mssv = '21520541' AND hoc_ky = '2022_2023_1';
 
 CREATE TABLE dang_ky_gui_xe
 (
