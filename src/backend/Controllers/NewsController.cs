@@ -13,7 +13,7 @@ public class NewsController : ControllerBase
 {
     private readonly eUITDbContext _context;
 
-    public StudentsController(eUITDbContext context)
+    public NewsController(eUITDbContext context)
     {
         _context = context;
     }
