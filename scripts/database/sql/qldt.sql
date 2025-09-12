@@ -217,7 +217,7 @@ CREATE OR REPLACE FUNCTION func_calculate_gpa(
 )
 RETURNS TABLE (
     gpa NUMERIC(4,2),
-    accumulated_credits INT
+    so_tin_chi_tich_luy INT
 )
 LANGUAGE sql
 AS $$
