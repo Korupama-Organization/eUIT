@@ -38,9 +38,16 @@ public class StudentsController : ControllerBase
         public string? anh_the_url { get; set; }
     }
 
+    private class QuickGpa
+    {
+        public float gpa { get; set; }
+
+        public int so_tin_chi_tich_luy { get; set; } = 0;
+    }
+
     // GET: api/students/nextclass
     [HttpGet("/nextclass")]
-    public async Task<ActionResult<NextClassInfo>> GetNextClass()
+    public async Task<ActionResult<NextClassDto>> GetNextClass()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         if (loggedInMssv == null)
@@ -73,7 +80,7 @@ public class StudentsController : ControllerBase
 
         return Ok(NextClass);
     }
-   
+
     // GET: api/students/card
     [HttpGet("/card")]
     public async Task<ActionResult<StudentCardDto>> GetStudentCard()
@@ -110,7 +117,7 @@ public class StudentsController : ControllerBase
             // Ví dụ: https://localhost:5093 + /files + /Students/Avatars/23520560.jpg
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
             avatarFullUrl = $"{baseUrl}/files/{student.anh_the_url}";
-            
+
         }
 
         // === Bước 4: Ánh xạ dữ liệu từ entity của database sang DTO để trả về ===
@@ -124,5 +131,39 @@ public class StudentsController : ControllerBase
         };
 
         return Ok(studentCard);
+    }
+
+    /// <summary>
+    /// Retrieves the quick GPA and accumulated credits for the currently authenticated student.
+    /// </summary>
+    [HttpGet("/quickgpa")]
+    public async Task<ActionResult<QuickGpaDto>> GetQuickGpa()
+    {
+        var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (loggedInMssv == null) return Forbid();
+
+        if (!int.TryParse(loggedInMssv, out int mssvInt))
+        {
+            return Forbid();
+        }
+
+        var result = await
+            _context.Database.SqlQuery<QuickGpa>(
+            $"SELECT * FROM func_calculate_gpa({mssvInt})")
+            .FirstOrDefaultAsync();
+
+        if (result == null)
+        {
+            return NotFound(); // Không tìm thấy sinh viên với mssv này
+        }
+
+        var gpaAndCredits = new QuickGpaDto
+        {
+            Gpa = result.gpa,
+            SoTinChiTichLuy = result.so_tin_chi_tich_luy
+        };
+
+        return Ok(gpaAndCredits);
     }
 }

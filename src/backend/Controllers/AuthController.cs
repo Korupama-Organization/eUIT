@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore; // <-- Quan trọng! Thêm dòng này
+using Microsoft.EntityFrameworkCore; 
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 
