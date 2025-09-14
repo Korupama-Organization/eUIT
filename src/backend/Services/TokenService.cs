@@ -36,7 +36,7 @@ public class TokenService : ITokenService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Now.AddDays(14), // Token sẽ hết hạn sau 14 ngày
+            Expires = DateTime.Now.AddDays(1), // Token sẽ hết hạn sau 1 ngày
             SigningCredentials = creds,
             Issuer = _config["Jwt:Issuer"],
             Audience = _config["Jwt:Audience"]
