@@ -17,7 +17,7 @@
  ```
  
  ### 2. Cấu hình database
- - Tạo một database PostgreSQL mới (ví dụ: `euitdb`).
+ - Tạo một database PostgreSQL mới (ví dụ: `eUIT`).
  - Cập nhật chuỗi kết nối trong file `appsettings.json` (tạo từ `appsettings.Example.json`).
  
  Ví dụ:
