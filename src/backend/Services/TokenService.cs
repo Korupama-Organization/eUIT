@@ -7,20 +7,15 @@ namespace eUIT.API.Services;
 
 public interface ITokenService
 {
-    string CreateToken(string userID, string role);
+    (string accessToken, string refreshToken) CreateToken(string userID, string role);
 }
-public class TokenService : ITokenService
+public class TokenService(IConfiguration config) : ITokenService
 {
-    private readonly IConfiguration _config;
+    private readonly IConfiguration _config = config;
 
-    public TokenService(IConfiguration config)
+    public (string accessToken, string refreshToken) CreateToken(string userID, string role)
     {
-        _config = config;
-    }
-
-    public string CreateToken(string userID, string role)
-    {
-        // 1. Tạo danh sách các "thông tin" (Claims) để đưa vào token
+        // 1. Tạo danh sách các "thông tin" (Claims) để đưa vào access token
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, userID),
@@ -32,22 +27,25 @@ public class TokenService : ITokenService
         // 3. Tạo "chứng thực ký" bằng thuật toán an toàn
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-        // 4. Mô tả toàn bộ token: thông tin, ngày hết hạn, chứng thực
+        // 4. Mô tả access token: thông tin, ngày hết hạn, chứng thực
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Now.AddDays(1), // Token sẽ hết hạn sau 1 ngày
+            Expires = DateTime.Now.AddMinutes(30), // Access Token sẽ hết hạn sau 30 phút
             SigningCredentials = creds,
             Issuer = _config["Jwt:Issuer"],
             Audience = _config["Jwt:Audience"]
         };
 
-        // 5. Tạo token dựa trên bản mô tả
+        // 5. Tạo access token dựa trên bản mô tả
         var tokenHandler = new JwtSecurityTokenHandler();
-        var token = tokenHandler.CreateToken(tokenDescriptor);
+        var accessToken = tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
 
-        // 6. Trả về chuỗi token đã được mã hóa
-        return tokenHandler.WriteToken(token);
+        // 6. Tạo refresh token (random string)
+        var refreshToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+        
+        // 7. Trả về chuỗi token đã được mã hóa
+        return (accessToken, refreshToken);
     }
 
 }
