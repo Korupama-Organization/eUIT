@@ -87,9 +87,9 @@ public class AuthController : ControllerBase
         if (storedToken == null || storedToken.ExpiryDate < DateTime.UtcNow)
             return Unauthorized(new { message = "Invalid or expired refresh token" });
 
-        // 2️ Lấy thông tin user (ví dụ: role, userId) từ DB
+        // 2️ Lấy thông tin user (role, userId) từ DB
         var userId = storedToken.UserId;
-        var role = storedToken.Role; // Nếu có cột Role, hoặc join bảng User
+        var role = storedToken.Role; 
 
         // 3️ Sinh ra cặp token mới
         var (newAccessToken, newRefreshToken) = _tokenService.CreateToken(userId, role);
