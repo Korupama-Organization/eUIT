@@ -46,6 +46,23 @@ public class StudentsController : ControllerBase
         public int so_tin_chi_tich_luy { get; set; } = 0;
     }
 
+    private class AcademicResultQueryResult
+    {
+        public string? hoc_ky { get; set; }
+        public string? ma_mon_hoc { get; set; }
+        public string? ten_mon_hoc { get; set; }
+        public int? so_tin_chi { get; set; }
+        public int? trong_so_qua_trinh { get; set; }
+        public int? trong_so_giua_ki { get; set; }
+        public int? trong_so_thuc_hanh { get; set; }
+        public int? trong_so_cuoi_ki { get; set; }
+        public decimal? diem_qua_trinh { get; set; }
+        public decimal? diem_giua_ki { get; set; }
+        public decimal? diem_thuc_hanh { get; set; }
+        public decimal? diem_cuoi_ki { get; set; }
+        public decimal? diem_tong_ket { get; set; }
+    }
+
     // GET: api/students/nextclass
     [HttpGet("/nextclass")]
     public async Task<ActionResult<NextClassDto>> GetNextClass()
@@ -168,4 +185,45 @@ public class StudentsController : ControllerBase
 
         return Ok(gpaAndCredits);
     }
+
+
+    // GET: api/students/academicresults
+    [HttpGet("/academicresults")]
+    public async Task<ActionResult<IEnumerable<AcademicResultDTO>>> GetAcademicResults()
+    {
+        var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (loggedInMssv == null) return Forbid();
+
+        if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+
+        // Gọi hàm database để lấy chi tiết kết quả học tập
+        var queryResults = await _context.Database.SqlQuery<AcademicResultQueryResult>
+            ($"SELECT * FROM chi_tiet_ket_qua_hoc_tap({mssvInt})")
+            .ToListAsync();
+
+        if (queryResults == null || queryResults.Count == 0) 
+            return NotFound("No academic results found");
+
+        // Chuyển đổi từ query result sang DTO
+        var academicResults = queryResults.Select(r => new AcademicResultDTO
+        {
+            HocKy = r.hoc_ky ?? string.Empty,
+            MaMonHoc = r.ma_mon_hoc ?? string.Empty,
+            TenMonHoc = r.ten_mon_hoc ?? string.Empty,
+            SoTinChi = r.so_tin_chi ?? 0,
+            TrongSoQuaTrinh = r.trong_so_qua_trinh ?? 0,
+            TrongSoGiuaKi = r.trong_so_giua_ki ?? 0,
+            TrongSoThucHanh = r.trong_so_thuc_hanh ?? 0,
+            TrongSoCuoiKi = r.trong_so_cuoi_ki ?? 0,
+            DiemQuaTrinh = r.diem_qua_trinh,
+            DiemGiuaKi = r.diem_giua_ki,
+            DiemThucHanh = r.diem_thuc_hanh,
+            DiemCuoiKi = r.diem_cuoi_ki,
+            DiemTongKet = r.diem_tong_ket
+        }).ToList();
+
+        return Ok(academicResults);
+    }
+
+
 }
