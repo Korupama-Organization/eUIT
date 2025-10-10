@@ -28,6 +28,7 @@ public class StudentsController : ControllerBase
         public int tiet_ket_thuc { get; set; }
         public string phong_hoc { get; set; }
         public DateTime ngay_hoc { get; set; }
+        public string ten_giang_vien { get; set; }
     }
     private class CardInfoResult
     {
@@ -75,7 +76,8 @@ public class StudentsController : ControllerBase
             TietBatDau = NextClassResult.tiet_bat_dau,
             TietKetThuc = NextClassResult.tiet_ket_thuc,
             PhongHoc = NextClassResult.phong_hoc,
-            NgayHoc = NextClassResult.ngay_hoc
+            NgayHoc = NextClassResult.ngay_hoc,
+            TenGiangVien = NextClassResult.ten_giang_vien
         };
 
         return Ok(NextClass);
