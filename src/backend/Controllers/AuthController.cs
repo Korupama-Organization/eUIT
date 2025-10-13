@@ -70,7 +70,8 @@ public class AuthController : ControllerBase
     {
         UserId = loginRequest.userId,
         Token = refreshToken,
-        ExpiryDate = DateTime.UtcNow.AddDays(7)
+        ExpiryDate = DateTime.UtcNow.AddDays(7),
+        Role = loginRequest.role
     });
     await _context.SaveChangesAsync();
 
@@ -80,6 +81,8 @@ public class AuthController : ControllerBase
     [HttpPost("refresh")]
     public async Task<IActionResult> Refresh([FromBody] string refreshToken)
     {
+        if (string.IsNullOrEmpty(request.RefreshToken))
+        return BadRequest(new { message = "Missing refresh token" });
         // 1️ Kiểm tra refresh token trong DB
         var storedToken = await _context.RefreshTokens
             .FirstOrDefaultAsync(t => t.Token == refreshToken);
@@ -87,9 +90,9 @@ public class AuthController : ControllerBase
         if (storedToken == null || storedToken.ExpiryDate < DateTime.UtcNow)
             return Unauthorized(new { message = "Invalid or expired refresh token" });
 
-        // 2️ Lấy thông tin user (role, userId) từ DB
+        // 2️ Lấy thông tin user (ví dụ: role, userId) từ DB
         var userId = storedToken.UserId;
-        var role = storedToken.Role; 
+        var role = storedToken.Role; // Nếu có cột Role, hoặc join bảng User
 
         // 3️ Sinh ra cặp token mới
         var (newAccessToken, newRefreshToken) = _tokenService.CreateToken(userId, role);
