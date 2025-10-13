@@ -31,7 +31,7 @@ public class TokenService(IConfiguration config) : ITokenService
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
-            Expires = DateTime.Now.AddMinutes(30), // Access Token sẽ hết hạn sau 30 phút
+            Expires = DateTime.UtcNow.AddMinutes(30), // Access Token sẽ hết hạn sau 30 phút
             SigningCredentials = creds,
             Issuer = _config["Jwt:Issuer"],
             Audience = _config["Jwt:Audience"]
