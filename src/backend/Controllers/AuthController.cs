@@ -81,8 +81,10 @@ public class AuthController : ControllerBase
     [HttpPost("refresh")]
     public async Task<IActionResult> Refresh([FromBody] string refreshToken)
     {
-        if (string.IsNullOrEmpty(request.RefreshToken))
-        return BadRequest(new { message = "Missing refresh token" });
+        if (string.IsNullOrEmpty(dto.RefreshToken))
+            return BadRequest(new { message = "Missing refresh token" });
+        
+        var refreshToken = dto.RefreshToken;
         // 1️ Kiểm tra refresh token trong DB
         var storedToken = await _context.RefreshTokens
             .FirstOrDefaultAsync(t => t.Token == refreshToken);
