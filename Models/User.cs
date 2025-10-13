@@ -10,7 +10,5 @@ namespace eUIT.API.Models
         public string PasswordHash { get; set; }
         public string Role { get; set; }
         
-        // Quan hệ 1-n với RefreshToken
-        public List<RefreshToken> RefreshTokens { get; set; }
     }
 }
