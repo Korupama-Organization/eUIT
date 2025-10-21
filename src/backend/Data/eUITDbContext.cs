@@ -9,4 +9,6 @@ public class eUITDbContext : DbContext
 
     }
 
+    public DbSet<User> Users { get; set; }              // Bảng Users
+    public DbSet<RefreshToken> RefreshTokens { get; set; } // Bảng RefreshTokens
 }
