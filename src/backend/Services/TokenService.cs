@@ -2,6 +2,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Cryptography;
 
 namespace eUIT.API.Services;
 
@@ -42,7 +43,13 @@ public class TokenService(IConfiguration config) : ITokenService
         var accessToken = tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
 
         // 6. Tạo refresh token (random string)
-        var refreshToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+        var randomBytes = new byte[64]; // 64 bytes = 512 bit → chuỗi ~88 ký tự Base64
+        using (var rng = RandomNumberGenerator.Create())
+        {
+            rng.GetBytes(randomBytes);
+        }
+
+var refreshToken = Convert.ToBase64String(randomBytes);
         
         // 7. Trả về chuỗi token đã được mã hóa
         return (accessToken, refreshToken);
