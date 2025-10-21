@@ -1,0 +1,175 @@
+{
+  "intents": {
+    "greeting": {
+      "description": "Chào hỏi, xin chào",
+      "slots": ["name", "time_of_day", "language"],
+      "patterns": [
+        "xin chào", "chào", "chào bạn", "hello", "hi", "hey", "alo",
+        "good morning", "good afternoon", "good evening", "hola", "bonjour"
+      ],
+      "response_templates": [
+        "Xin chào!",
+        "Chào bạn!",
+        "Xin chào! Tôi có thể giúp gì cho bạn?",
+        "Chào {name}!"
+      ],
+      "response_rules": {
+        "time_of_day": {
+          "morning": ["Chào buổi sáng!"],
+          "afternoon": ["Chào buổi chiều!"],
+          "evening": ["Chào buổi tối!"]
+        },
+        "language": {
+          "en": ["Hello! How can I help?"],
+          "vi": ["Xin chào! Tôi có thể giúp gì cho bạn?"]
+        }
+      },
+      "follow_up_suggestions": [
+        "Lớp tiếp theo của tôi khi nào?",
+        "Ngày mai học ở phòng nào?",
+        "GPA hiện tại của tôi?"
+      ]
+    },
+    "overview": {
+      "description": "Tổng quan về chức năng của chatbot",
+      "slots": [],
+      "patterns": [
+        "bạn có thể làm gì", "chức năng của bạn là gì", "tôi có thể hỏi gì", "giúp tôi với", "tôi cần giúp đỡ", "bạn có thể giúp gì cho tôi", "hướng dẫn sử dụng","tôi không biết hỏi gì", "tôi không biết hỏi thế nào"
+      ],
+      "response_templates": [
+        "Tôi có thể giúp bạn xem lịch học, kiểm tra điểm GPA, và cung cấp thông tin sinh viên.",
+        "Bạn có thể hỏi về lịch học, điểm số, hoặc thông tin cá nhân của bạn."
+      ],
+      "follow_up_suggestions": [
+        "Lớp tiếp theo của tôi khi nào?",
+        "Ngày mai học ở phòng nào?",
+        "GPA hiện tại của tôi?"
+      ]
+    },
+    "classes": {
+      "description": "Hỏi về lịch học, lớp tiếp theo, phòng, môn, giảng viên, thời gian",
+      "slots": ["date", "time", "info_type", "subject", "teacher", "room"],
+      "patterns": [
+        "lớp tiếp theo", "buổi học tiếp theo", "lớp kế tiếp", "tiết học kế tiếp",
+        "hôm nay học gì", "ngày mai học gì", "tuần này học gì", "lịch học hôm nay", "lịch học tuần này",
+        "hôm nay có học không", "ngày mai có học không",
+
+        "hôm nay học ở đâu", "ngày mai học ở đâu", "lớp tiếp theo học phòng nào", "phòng học lớp tiếp theo", "phòng học hôm nay", "phòng học ngày mai",
+
+        "lớp tiếp theo là môn gì", "môn học tiếp theo là gì", "môn học hôm nay", "môn học ngày mai",
+
+        "ai dạy lớp tiếp theo", "giảng viên lớp tiếp theo là ai", "ai dạy môn ...", "giảng viên nào dạy lớp ngày mai",
+
+        "lớp tiếp theo mấy giờ", "mấy giờ học lớp ...", "mấy giờ học môn ...", "lớp ... học vào lúc nào", "môn ... học vào lúc nào", "khi nào học môn ...", "khi nào có lớp tiếp theo",
+
+        "tuần này có học lớp ... không", "tuần này có học môn ... không"
+      ],
+      "info_types": {
+        "room": "Phòng học (VD: hỏi 'phòng nào', 'ở đâu')",
+        "subject": "Môn học (VD: hỏi 'môn gì', 'môn học tiếp theo')",
+        "teacher": "Giảng viên (VD: hỏi 'ai dạy', 'giảng viên nào')",
+        "time": "Thời gian (VD: hỏi 'mấy giờ', 'lúc nào', 'tiết')",
+        "schedule": "Lịch học tổng thể (VD: hỏi 'lịch học', 'có học không')"
+      },
+      "response_templates": [
+        "Phòng học: {room}.",
+        "Môn học: {subject}.",
+        "Giảng viên: {teacher}.",
+        "Thời gian: {time}.",
+        "{subject} — {time} — Phòng {room}.",
+        "Mình tìm thấy: {subject} ở {room} vào {time}.",
+        "Bạn có {subject} ở {room} vào {time}.",
+        "Mình không tìm thấy thông tin cụ thể, vui lòng kiểm tra thời khóa biểu hoặc cung cấp thêm chi tiết (ví dụ: ngày hoặc tên lớp)."
+      ],
+      "tone_variations": {
+        "short": ["{room}", "{subject}", "{time}"],
+        "friendly": ["Mình tìm thấy: {subject} ở {room} vào {time}.", "Bạn có {subject} ở {room} vào {time}.", "Phòng học: {room}.", "Thời gian: {time}.", "Môn học: {subject}.", "Giảng viên: {teacher}.", "Mình không tìm thấy thông tin cụ thể, vui lòng kiểm tra thời khóa biểu hoặc cung cấp thêm chi tiết."] ,
+        "formal": ["{subject} — {time} — Phòng {room}.", "Phòng học: {room}.", "Thời gian: {time}."]
+      },
+      "selection_rules": {
+        "prefer_db": "Nếu dữ liệu có sẵn trong DB, dùng giá trị DB (room/subject/time).",
+        "if_info_type_room": "Nếu user hỏi về phòng (info_type==room) trả về mẫu 'short' hoặc 'friendly' chỉ chứa phòng.",
+        "if_info_type_time": "Nếu user hỏi về thời gian (info_type==time) trả về chỉ thời gian.",
+        "default": "Dùng mẫu 'friendly'"
+      },
+      "follow_up_suggestions": [
+        "Ngày mai học ở phòng nào?",
+        "Lớp tiếp theo là môn gì?",
+        "Ai dạy lớp tiếp theo?",
+        "Lớp tiếp theo học lúc mấy giờ?",
+        "Xem chi tiết thời khóa biểu cho tuần này",
+        "Tải thời khóa biểu của tôi"
+      ]
+      ,
+      "quick_actions": [
+        {"label": "Xem thời khóa biểu chi tiết", "action": "open_schedule"},
+        {"label": "Kiểm tra điểm GPA", "action": "open_gpa"},
+        {"label": "Liên hệ phòng đào tạo", "action": "contact_admin"}
+      ]
+    },
+    "schedule": {
+      "description": "Lịch học theo ngày/tuần",
+      "slots": ["date", "day_of_week", "time"],
+      "response_templates": [
+        "Hôm nay: {schedule}",
+        "Ngày mai: {schedule}",
+        "Tuần này: {schedule}"
+      ]
+    },
+    "gpa": {
+      "description": "Hỏi về điểm GPA",
+      "slots": ["gpa_type"],
+      "gpa_types": {
+        "cumulative": "GPA tích lũy",
+        "semester": "GPA học kỳ"
+      },
+      "response_templates": [
+        "GPA: {gpa}",
+        "GPA tích lũy: {cumulative_gpa}",
+        "GPA học kỳ: {semester_gpa}"
+      ]
+    },
+    "student_info": {
+      "description": "Thông tin sinh viên",
+      "slots": ["info_type"],
+      "info_types": {
+        "mssv": "Mã số sinh viên",
+        "name": "Họ tên",
+        "major": "Ngành học",
+        "year": "Khóa học"
+      },
+      "response_templates": [
+        "MSSV: {mssv}",
+        "Tên: {name}",
+        "Ngành: {major}",
+        "Khóa: {year}"
+      ]
+    },
+    "help": {
+      "description": "Yêu cầu trợ giúp",
+      "slots": ["topic"],
+      "response_templates": [
+        "Tôi có thể giúp bạn về: lịch học, điểm số, thông tin sinh viên",
+        "Bạn có thể hỏi về lịch học, GPA, hoặc thông tin cá nhân"
+      ]
+    }
+  },
+  "slot_patterns": {
+    "date": {
+      "today": ["hôm nay", "ngày hôm nay", "bây giờ"],
+      "tomorrow": ["ngày mai", "mai", "sáng mai", "chiều mai"],
+      "specific": ["thứ 2", "thứ 3", "thứ 4", "thứ 5", "thứ 6", "thứ 7", "chủ nhật"]
+    },
+    "time": {
+      "morning": ["sáng", "buổi sáng", "sáng mai"],
+      "afternoon": ["chiều", "buổi chiều", "chiều nay"],
+      "evening": ["tối", "buổi tối", "tối nay"]
+    },
+    "info_type": {
+      "room": ["phòng", "lớp", "ở đâu", "phòng học", "nhà", "địa điểm"],
+      "time": ["mấy giờ", "khi nào", "thời gian", "tiết", "mấy tiết"],
+      "subject": ["môn gì", "môn học", "học gì", "subject"],
+      "teacher": ["ai dạy", "giảng viên", "thầy", "cô", "giáo viên"]
+    }
+  }
+}

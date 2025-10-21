@@ -1,0 +1,15 @@
+{"input":"Chiều nay học ở đâu?","intent":"next_class","slots":{"time":"afternoon","info_type":"room"},"expected_response":"D102"}
+{"input":"Môn tiếp theo học phòng nào?","intent":"next_class","slots":{"info_type":"room"},"expected_response":"B203"}
+{"input":"Sáng mai mấy giờ có lớp?","intent":"next_class","slots":{"date":"tomorrow","time":"morning","info_type":"time"},"expected_response":"7:30"}
+{"input":"Lớp tiếp theo là môn gì?","intent":"next_class","slots":{"info_type":"subject"},"expected_response":"Hệ điều hành"}
+{"input":"Ai dạy buổi chiều?","intent":"next_class","slots":{"time":"afternoon","info_type":"teacher"},"expected_response":"Thầy Hoàng Văn D"}
+{"input":"Điểm tích lũy hiện tại?","intent":"gpa","slots":{"gpa_type":"cumulative"},"expected_response":"3.22"}
+{"input":"GPA học kỳ trước?","intent":"gpa","slots":{"gpa_type":"semester"},"expected_response":"3.1"}
+{"input":"Tôi tên gì?","intent":"student_info","slots":{"info_type":"name"},"expected_response":"Lê Thị Mai"}
+{"input":"Ngành của tôi?","intent":"student_info","slots":{"info_type":"major"},"expected_response":"Kỹ thuật phần mềm"}
+{"input":"MSSV?","intent":"student_info","slots":{"info_type":"mssv"},"expected_response":"23520789"}
+{"input":"Thứ 3 có gì?","intent":"schedule","slots":{"day_of_week":"tuesday"},"expected_response":"Thứ 3: Mạng máy tính, Lập trình web"}
+{"input":"Tuần sau học gì?","intent":"schedule","slots":{"date":"next_week"},"expected_response":"Tuần sau: 18 tiết học"}
+{"input":"Hi bạn","intent":"greeting","slots":{},"expected_response":"Xin chào!"}
+{"input":"Chào","intent":"greeting","slots":{},"expected_response":"Chào bạn!"}
+{"input":"Tôi không biết cách hỏi","intent":"help","slots":{},"expected_response":"Bạn có thể hỏi về lịch học, GPA, hoặc thông tin cá nhân"}

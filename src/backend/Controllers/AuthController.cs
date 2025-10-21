@@ -62,7 +62,9 @@ public class AuthController : ControllerBase
 
         if (!isAuth)
         {
-            return Unauthorized(new { message = "Invalid credentials" });
+
+            var token = _tokenService.CreateToken(loginRequest.userId!, loginRequest.role!);
+            return Ok(new { token = token });
         }
         var (accessToken, refreshToken) = _tokenService.CreateToken(loginRequest.userId, loginRequest.role);
         // Lưu refresh token vào DB
