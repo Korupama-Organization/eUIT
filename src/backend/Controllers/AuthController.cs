@@ -99,60 +99,86 @@ public class AuthController : ControllerBase
 }
 
     [HttpPost("refresh")]
-public async Task<IActionResult> Refresh([FromBody] RefreshRequestDTO dto)
+public async Task<IActionResult> Refresh([FromBody] RefreshRequestDTO refreshRequest)
 {
-    if (string.IsNullOrEmpty(dto.RefreshToken))
+    if (refreshRequest == null || string.IsNullOrEmpty(refreshRequest.RefreshToken))
         return BadRequest(new { message = "Missing refresh token" });
 
-    var refreshToken = dto.RefreshToken;
+    await using var connection = _context.Database.GetDbConnection();
+    await connection.OpenAsync();
 
-    // 1️ Kiểm tra token đầu vào bằng hàm DB (trả về token_id, user_role, user_id)
-    await using var validateCmd = _context.Database.GetDbConnection().CreateCommand();
-    validateCmd.CommandText = "SELECT token_id, user_role, user_id FROM validate_refresh_token(@token_plain)";
+    Guid tokenId;
+    string dbRole;
+    string dbUserId;
 
-    var vTokenParam = validateCmd.CreateParameter();
-    vTokenParam.ParameterName = "token_plain";
-    vTokenParam.Value = refreshToken;
-    validateCmd.Parameters.Add(vTokenParam);
-
-    await using var reader = await validateCmd.ExecuteReaderAsync();
-    if (!await reader.ReadAsync())
+    // 1️ Validate refresh token trong DB
+    await using (var validateCmd = connection.CreateCommand())
     {
-        return Unauthorized(new { message = "Invalid or expired refresh token" });
+        validateCmd.CommandText = "SELECT * FROM validate_refresh_token(@token_plain)"; //update func validate_refresh_token trong auth.sql vi cot user_role khong duoc doc trong cai truoc
+        var vp = validateCmd.CreateParameter();
+        vp.ParameterName = "token_plain";
+        vp.Value = refreshRequest.RefreshToken;
+        validateCmd.Parameters.Add(vp);
+
+        await using var reader = await validateCmd.ExecuteReaderAsync();
+        if (!await reader.ReadAsync())
+            return Unauthorized(new { message = "Invalid or expired refresh token" });
+
+        tokenId = reader.GetGuid(reader.GetOrdinal("token_id"));
+        dbRole = reader.GetString(reader.GetOrdinal("user_role"));
+        dbUserId = reader.GetString(reader.GetOrdinal("user_id"));
     }
 
-    var tokenId = reader.GetGuid(0);
-    var dbRole = reader.GetString(1);
-    var dbUserId = reader.GetString(2);
-
-    // 2 Tạo token mới
+    // 2️ Tạo mới access/refresh token
     var (newAccessToken, newRefreshToken) = _tokenService.CreateToken(dbUserId, dbRole);
 
-    // 3 Loai bỏ token cũ và phát hành token mới qua hàm DB
-    await using var revokeCmd = _context.Database.GetDbConnection().CreateCommand();
-    revokeCmd.CommandText = "SELECT revoke_refresh_token_by_id(@id)";
-    var rid = revokeCmd.CreateParameter();
-    rid.ParameterName = "id";
-    rid.Value = tokenId;
-    revokeCmd.Parameters.Add(rid);
-    await revokeCmd.ExecuteNonQueryAsync();
+    // 3️ Thu hồi refresh token cũ
+    await using (var revokeCmd = connection.CreateCommand())
+    {
+        revokeCmd.CommandText = "SELECT revoke_refresh_token_by_id(@id)";
+        var idp = revokeCmd.CreateParameter();
+        idp.ParameterName = "id";
+        idp.Value = tokenId;
+        revokeCmd.Parameters.Add(idp);
+        await revokeCmd.ExecuteNonQueryAsync();
+    }
 
-    await using var issueCmd2 = _context.Database.GetDbConnection().CreateCommand();
-    issueCmd2.CommandText = "SELECT issue_refresh_token(@role::auth_user_role, @userId, @token_plain, @ttl::interval)";
-    var irRole = issueCmd2.CreateParameter(); irRole.ParameterName = "role"; irRole.Value = dbRole; issueCmd2.Parameters.Add(irRole);
-    var irUser = issueCmd2.CreateParameter(); irUser.ParameterName = "userId"; irUser.Value = dbUserId; issueCmd2.Parameters.Add(irUser);
-    var irToken = issueCmd2.CreateParameter(); irToken.ParameterName = "token_plain"; irToken.Value = newRefreshToken; issueCmd2.Parameters.Add(irToken);
-    var irTtl = issueCmd2.CreateParameter(); irTtl.ParameterName = "ttl"; irTtl.Value = "7 days"; issueCmd2.Parameters.Add(irTtl);
-    await issueCmd2.ExecuteScalarAsync();
+    // 4️ Lưu refresh token mới
+    await using (var issueCmd = connection.CreateCommand())
+    {
+        issueCmd.CommandText =
+            "SELECT issue_refresh_token(@role::auth_user_role, @userId, @token_plain, @ttl::interval)";
 
-    // 4 Trả token mới về cho client
+        var irRole = issueCmd.CreateParameter();
+        irRole.ParameterName = "role";
+        irRole.Value = dbRole;
+        issueCmd.Parameters.Add(irRole);
+
+        var irUser = issueCmd.CreateParameter();
+        irUser.ParameterName = "userId";
+        irUser.Value = dbUserId;
+        issueCmd.Parameters.Add(irUser);
+
+        var irToken = issueCmd.CreateParameter();
+        irToken.ParameterName = "token_plain";
+        irToken.Value = newRefreshToken;
+        issueCmd.Parameters.Add(irToken);
+
+        var irTtl = issueCmd.CreateParameter();
+        irTtl.ParameterName = "ttl";
+        irTtl.Value = "7 days";
+        issueCmd.Parameters.Add(irTtl);
+
+        await issueCmd.ExecuteNonQueryAsync();
+    }
+
+    // 5️⃣ Trả về token mới cho client
     return Ok(new
     {
         accessToken = newAccessToken,
         refreshToken = newRefreshToken
     });
 }
-
 
     
     [HttpGet("profile")]
