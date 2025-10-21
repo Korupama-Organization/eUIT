@@ -1,76 +1,119 @@
-import React from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from "react-native";
 
+import React, { useState } from 'react';
+import { 
+  View, 
+  TextInput, 
+  Text, 
+  TouchableOpacity, 
+  StyleSheet 
+} from 'react-native';
+
+/**
+ * InputField Component - Input field đơn giản cho form đăng nhập
+ */
 const InputField = ({
   label,
   value,
   onChangeText,
   placeholder,
-  secureTextEntry,
-  showPassword,
-  onTogglePassword,
-  icon,
+  secureTextEntry = false,
+  keyboardType = 'default',
+  showPasswordToggle = false,
+  error,
+  style,
+  ...props
 }) => {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+
   return (
-    <View style={styles.inputContainer}>
-      <Text style={styles.label}>{label}</Text>
-      <View style={styles.inputWrapper}>
-        <Text style={styles.icon}>{icon}</Text>
+    <View style={[styles.container, style]}>
+      {/* Label */}
+      {label && (
+        <Text style={styles.label}>{label}</Text>
+      )}
+      
+      {/* Input Container */}
+      <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
+          style={styles.textInput}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          secureTextEntry={secureTextEntry && !showPassword}
+          placeholderTextColor="#999"
+          secureTextEntry={secureTextEntry && !isPasswordVisible}
+          keyboardType={keyboardType}
           autoCapitalize="none"
-          keyboardType={icon === "✉" ? "email-address" : "default"}
+          autoCorrect={false}
+          returnKeyType="done"
+          blurOnSubmit={true}
+          {...props}
         />
-        {secureTextEntry && (
-          <TouchableOpacity onPress={onTogglePassword} style={styles.eyeIcon}>
-            <Text>{showPassword ? "👁" : "👁‍🗨"}</Text>
+        
+        {/* Password Toggle */}
+        {showPasswordToggle && (
+          <TouchableOpacity
+            onPress={togglePasswordVisibility}
+            style={styles.eyeButton}
+          >
+            <Text style={styles.eyeIcon}>
+              {isPasswordVisible ? '�️' : '👁️‍🗨️'}
+            </Text>
           </TouchableOpacity>
         )}
       </View>
+      
+      {/* Error Message */}
+      {error && (
+        <Text style={styles.errorText}>{error}</Text>
+      )}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  inputContainer: {
-    marginBottom: 20,
+
+  container: {
+    marginBottom: 15,
   },
   label: {
-    fontSize: 14,
-    color: "#666",
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#333',
     marginBottom: 8,
   },
-  inputWrapper: {
-    flexDirection: "row",
-    alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#0066FF",
-    paddingBottom: 8,
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+    backgroundColor: '#fff',
+    paddingHorizontal: 15,
+    height: 50,
   },
-  icon: {
-    fontSize: 18,
-    marginRight: 8,
-    color: "#666",
-  },
-  input: {
+  textInput: {
     flex: 1,
     fontSize: 16,
-    color: "#333",
-    padding: 0,
+    color: '#333',
+    height: '100%',
+  },
+  eyeButton: {
+    padding: 5,
+    marginLeft: 10,
   },
   eyeIcon: {
-    padding: 4,
+    fontSize: 20,
+  },
+  errorText: {
+    fontSize: 14,
+    color: '#ff4444',
+    marginTop: 5,
   },
 });
 
 export default InputField;
+
