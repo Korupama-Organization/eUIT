@@ -262,11 +262,11 @@ DECLARE
     v_hash text := encode(digest(p_token_plain, 'sha256'), 'hex');
 BEGIN
     RETURN QUERY
-    SELECT id, user_role, user_id
-    FROM auth_refresh_tokens
-    WHERE token_hash = v_hash
-      AND revoked = false
-      AND expires_at > now();
+    SELECT at.id, at.user_role, at.user_id
+    FROM auth_refresh_tokens at --them alias at de khong bi nham user_role
+    WHERE at.token_hash = v_hash
+      AND at.revoked = false
+      AND at.expires_at > now();
 END;
 $$;
 
