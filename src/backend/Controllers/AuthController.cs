@@ -8,6 +8,7 @@ using System.Data.Common;
 using eUIT.API.DTOs;
 using eUIT.API.Data;
 using eUIT.API.Services;
+using eUIT.API.Models;
 
 namespace eUIT.API.Controllers;
 
@@ -59,7 +60,7 @@ public class AuthController : ControllerBase
         var scalar = await cmd.ExecuteScalarAsync();
         var isAuth = scalar is bool b && b;
 
-        if (isAuth)
+        if (!isAuth)
         {
             var token = _tokenService.CreateToken(loginRequest.userId!, loginRequest.role!);
             return Ok(new { token = token });
@@ -67,6 +68,7 @@ public class AuthController : ControllerBase
         return Unauthorized(new { message = "Invalid credentials" });
     }
 
+    
     [HttpGet("profile")]
     [Authorize] 
     public IActionResult GetProfile()

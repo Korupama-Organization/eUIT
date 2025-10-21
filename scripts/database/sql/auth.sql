@@ -133,12 +133,6 @@ BEGIN
     VALUES (p_ma_giang_vien, auth_hash_password(p_password));
 END;
 $$;
-SELECT create_lecturer_account('80068', 'Password123');
-SELECT auth_authenticate(
-    p_role     := 'lecturer',
-    p_user_id  := '80068',
-    p_password := 'Password123'
-);
 
 CREATE OR REPLACE FUNCTION create_admin_account(p_tai_khoan text, p_password text)
 RETURNS void

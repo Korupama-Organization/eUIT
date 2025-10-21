@@ -9,7 +9,7 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Thêm dịch vụ vào ứng dụng ---
-
+builder.WebHost.UseUrls("http://0.0.0.0:5128");
 // Thêm dịch vụ Controllers
 builder.Services.AddControllers();
 
