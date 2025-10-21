@@ -20,7 +20,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration["Jwt:Key"])),
+                .GetBytes(builder.Configuration["Jwt:Key"]!)),
             ValidateIssuer = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidateAudience = true,
@@ -29,7 +29,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddScoped<eUIT.API.Services.ITokenService, eUIT.API.Services.TokenService>();
+builder.Services.AddScoped<eUIT.API.Services.IChatbotService, eUIT.API.Services.ChatbotService>();
 
+// Thêm HttpClient cho Gemini AI
+builder.Services.AddHttpClient();
 
 // Lấy chuỗi kết nối từ file appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("eUITDatabase");

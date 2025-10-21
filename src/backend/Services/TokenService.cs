@@ -27,7 +27,7 @@ public class TokenService : ITokenService
             new Claim(ClaimTypes.Role, role)
         };
         // 2. Lấy key từ appsettings.json
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]!));
 
         // 3. Tạo "chứng thực ký" bằng thuật toán an toàn
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);

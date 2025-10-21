@@ -1,0 +1,41 @@
+{"input":"Xin chào","intent":"greeting","slots":{},"desired_response":"Xin chào! Tôi có thể giúp gì cho bạn?"}
+{"input":"Hello","intent":"greeting","slots":{},"desired_response":"Chào bạn!"}
+{"input":"Chào bạn","intent":"greeting","slots":{},"desired_response":"Xin chào! Tôi là trợ lý ảo của trường."}
+{"input":"Hi","intent":"greeting","slots":{},"desired_response":"Xin chào!"}
+{"input":"Ngày mai mình học ở phòng nào?","intent":"next_class","slots":{"date":"tomorrow","info_type":"room"},"desired_response":"A203"}
+{"input":"Sáng mai học phòng gì?","intent":"next_class","slots":{"date":"tomorrow","time":"morning","info_type":"room"},"desired_response":"Phòng B105"}
+{"input":"Buổi học tiếp theo ở đâu?","intent":"next_class","slots":{"info_type":"room"},"desired_response":"Phòng C201"}
+{"input":"Mai học ở nhà nào?","intent":"next_class","slots":{"date":"tomorrow","info_type":"room"},"desired_response":"D304"}
+{"input":"Lớp tiếp theo học phòng gì?","intent":"next_class","slots":{"info_type":"room"},"desired_response":"E102"}
+{"input":"Hôm nay có học không?","intent":"next_class","slots":{"date":"today","info_type":"schedule"},"desired_response":"Có, bạn có 2 tiết học."}
+{"input":"Mai học mấy tiết?","intent":"next_class","slots":{"date":"tomorrow","info_type":"time"},"desired_response":"Tiết 3-4"}
+{"input":"Buổi học tiếp theo là mấy giờ?","intent":"next_class","slots":{"info_type":"time"},"desired_response":"9:30 - 11:00"}
+{"input":"Khi nào có lớp tiếp theo?","intent":"next_class","slots":{"info_type":"time"},"desired_response":"7:30 sáng mai"}
+{"input":"Tiết học tiếp theo mấy giờ?","intent":"next_class","slots":{"info_type":"time"},"desired_response":"13:30 - 15:00"}
+{"input":"Ngày mai học môn gì?","intent":"next_class","slots":{"date":"tomorrow","info_type":"subject"},"desired_response":"Toán rời rạc"}
+{"input":"Lớp tiếp theo là môn gì?","intent":"next_class","slots":{"info_type":"subject"},"desired_response":"Cấu trúc dữ liệu"}
+{"input":"Mai học gì?","intent":"next_class","slots":{"date":"tomorrow","info_type":"subject"},"desired_response":"Thuật toán"}
+{"input":"Môn tiếp theo là gì?","intent":"next_class","slots":{"info_type":"subject"},"desired_response":"Cơ sở dữ liệu"}
+{"input":"Ai dạy môn này?","intent":"next_class","slots":{"info_type":"teacher"},"desired_response":"Thầy Nguyễn Văn A"}
+{"input":"Giảng viên tiếp theo là ai?","intent":"next_class","slots":{"info_type":"teacher"},"desired_response":"Cô Trần Thị B"}
+{"input":"Thầy nào dạy lớp mai?","intent":"next_class","slots":{"date":"tomorrow","info_type":"teacher"},"desired_response":"Thầy Lê Văn C"}
+{"input":"GPA của tôi bao nhiêu?","intent":"gpa","slots":{"gpa_type":"cumulative"},"desired_response":"3.45"}
+{"input":"Điểm trung bình tích lũy?","intent":"gpa","slots":{"gpa_type":"cumulative"},"desired_response":"GPA: 3.67"}
+{"input":"GPA học kỳ này?","intent":"gpa","slots":{"gpa_type":"semester"},"desired_response":"3.2"}
+{"input":"Điểm trung bình học kỳ?","intent":"gpa","slots":{"gpa_type":"semester"},"desired_response":"3.8"}
+{"input":"Điểm của tôi như thế nào?","intent":"gpa","slots":{"gpa_type":"cumulative"},"desired_response":"GPA tích lũy: 3.55"}
+{"input":"MSSV của tôi là gì?","intent":"student_info","slots":{"info_type":"mssv"},"desired_response":"23520560"}
+{"input":"Mã số sinh viên?","intent":"student_info","slots":{"info_type":"mssv"},"desired_response":"23520560"}
+{"input":"Tên tôi là gì?","intent":"student_info","slots":{"info_type":"name"},"desired_response":"Nguyễn Văn An"}
+{"input":"Tôi học ngành gì?","intent":"student_info","slots":{"info_type":"major"},"desired_response":"Công nghệ thông tin"}
+{"input":"Ngành học của tôi?","intent":"student_info","slots":{"info_type":"major"},"desired_response":"Khoa học máy tính"}
+{"input":"Tôi khóa mấy?","intent":"student_info","slots":{"info_type":"year"},"desired_response":"Khóa 2023"}
+{"input":"Lịch học hôm nay","intent":"schedule","slots":{"date":"today"},"desired_response":"Hôm nay bạn có 3 tiết học."}
+{"input":"Lịch ngày mai","intent":"schedule","slots":{"date":"tomorrow"},"desired_response":"Ngày mai: Toán rời rạc (7:30-9:00, A203)"}
+{"input":"Lịch tuần này","intent":"schedule","slots":{"date":"this_week"},"desired_response":"Tuần này bạn có 15 tiết học."}
+{"input":"Thứ 2 học gì?","intent":"schedule","slots":{"day_of_week":"monday"},"desired_response":"Thứ 2: Cấu trúc dữ liệu, Toán cao cấp"}
+{"input":"Sáng nay có học gì không?","intent":"schedule","slots":{"date":"today","time":"morning"},"desired_response":"Sáng nay: Thuật toán (7:30-9:00)"}
+{"input":"Tôi cần giúp đỡ","intent":"help","slots":{},"desired_response":"Tôi có thể giúp bạn: xem lịch học, kiểm tra điểm, thông tin sinh viên."}
+{"input":"Làm thế nào để xem điểm?","intent":"help","slots":{"topic":"grades"},"desired_response":"Bạn có thể hỏi: 'GPA của tôi bao nhiêu?' hoặc 'Kết quả học tập'"}
+{"input":"Cách xem lịch học?","intent":"help","slots":{"topic":"schedule"},"desired_response":"Bạn có thể hỏi: 'Hôm nay học gì?' hoặc 'Lớp tiếp theo khi nào?'"}
+{"input":"Bạn có thể làm gì?","intent":"help","slots":{},"desired_response":"Tôi giúp bạn xem lịch học, GPA, thông tin sinh viên."}
