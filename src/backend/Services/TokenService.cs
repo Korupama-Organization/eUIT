@@ -43,6 +43,8 @@ public class TokenService(IConfiguration config) : ITokenService
         var accessToken = tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
 
         // 6. Tạo refresh token (random string)
+        
+
         var randomBytes = new byte[64]; // 64 bytes = 512 bit → chuỗi ~88 ký tự Base64
         using (var rng = RandomNumberGenerator.Create())
         {
@@ -50,6 +52,7 @@ public class TokenService(IConfiguration config) : ITokenService
         }
 
 var refreshToken = Convert.ToBase64String(randomBytes);
+
         
         // 7. Trả về chuỗi token đã được mã hóa
         return (accessToken, refreshToken);
