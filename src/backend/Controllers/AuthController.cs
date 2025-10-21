@@ -86,26 +86,26 @@ public async Task<IActionResult> Refresh([FromBody] RefreshRequestDTO dto)
 
     var refreshToken = dto.RefreshToken;
 
-    // 1️⃣ Kiểm tra refresh token trong DB
+    // 1️ Kiểm tra refresh token trong DB
     var storedToken = await _context.RefreshTokens
         .FirstOrDefaultAsync(t => t.Token == refreshToken);
 
     if (storedToken == null || storedToken.ExpiryDate < DateTime.UtcNow)
         return Unauthorized(new { message = "Invalid or expired refresh token" });
 
-    // 2️⃣ Lấy thông tin user
+    // 2️ Lấy thông tin user
     var userId = storedToken.UserId;
     var role = storedToken.Role;
 
-    // 3️⃣ Tạo token mới
+    // 3️ Tạo token mới
     var (newAccessToken, newRefreshToken) = _tokenService.CreateToken(userId, role);
 
-    // 4️⃣ Cập nhật DB
+    // 4️ Cập nhật DB
     storedToken.Token = newRefreshToken;
     storedToken.ExpiryDate = DateTime.UtcNow.AddDays(7);
     await _context.SaveChangesAsync();
 
-    // 5️⃣ Trả về client
+    // 5️ Trả về client
     return Ok(new
     {
         accessToken = newAccessToken,
