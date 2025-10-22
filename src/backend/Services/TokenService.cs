@@ -88,8 +88,7 @@ public class TokenService : ITokenService
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        var accessToken = tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
-
+        var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
 
