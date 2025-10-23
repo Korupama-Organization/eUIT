@@ -31,6 +31,9 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddScoped<eUIT.API.Services.ITokenService, eUIT.API.Services.TokenService>();
 builder.Services.AddScoped<eUIT.API.Services.IChatbotService, eUIT.API.Services.ChatbotService>();
 
+// Background service để dọn dẹp token hết hạn
+builder.Services.AddHostedService<eUIT.API.Services.TokenCleanupService>();
+
 // Thêm HttpClient cho Gemini AI
 builder.Services.AddHttpClient();
 
