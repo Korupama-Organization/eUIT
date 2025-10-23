@@ -81,3 +81,4 @@ yarn-error.*
 /shelf/
 /workspace.xml
 appsettings.json
+launchSettings.json
