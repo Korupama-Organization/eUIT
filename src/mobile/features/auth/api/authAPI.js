@@ -4,20 +4,17 @@
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AUTH_ERRORS } from '../types/auth.types.js';
+import { API_BASE_URL } from '@env';
 
-// Cấu hình API
-// Thử các URL khác nhau tùy theo môi trường:
-// - Android Emulator: 'http://10.0.2.2:5128/api'  
-// - iOS Simulator: 'http://localhost:5128/api'
-// - Real device: 'http://192.168.1.x:5128/api' (thay x bằng IP máy tính)
-const API_BASE_URL = 'http://192.168.1.84:5128/api'; 
 const AUTH_ENDPOINTS = {
-  LOGIN: '/auth/login',
-  REFRESH: '/auth/refresh', 
-  LOGOUT: '/auth/logout',
-  LOGOUT_ALL: '/auth/logout-all',
-  PROFILE: '/auth/profile'
+  LOGIN: `${API_BASE_URL}/auth/login`,
+  REFRESH: `${API_BASE_URL}/auth/refresh`,
+  LOGOUT: `${API_BASE_URL}/auth/logout`,
+  LOGOUT_ALL: `${API_BASE_URL}/auth/logout-all`,
+  PROFILE: `${API_BASE_URL}/auth/profile`,
 };
+
+export { AUTH_ENDPOINTS };
 
 // Keys để lưu token trong AsyncStorage
 const STORAGE_KEYS = {
@@ -129,7 +126,7 @@ const getStoredTokens = async () => {
  * @returns {Promise<import('../types/auth.types.js').LoginResponse>}
  */
 export const login = async (credentials) => {
-  const fullUrl = `${API_BASE_URL}${AUTH_ENDPOINTS.LOGIN}`;
+  const fullUrl = AUTH_ENDPOINTS.LOGIN;
   console.log('🔗 Login URL:', fullUrl);
   console.log('📤 Login data:', credentials);
   
