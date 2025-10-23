@@ -7,6 +7,7 @@ obj/
 *.suo
 *.userosscache
 *.sln.docstates
+launchSettings.json
 
 # Ignore Visual Studio Code settings
 .vscode/
@@ -81,4 +82,3 @@ yarn-error.*
 /shelf/
 /workspace.xml
 appsettings.json
-launchSettings.json
