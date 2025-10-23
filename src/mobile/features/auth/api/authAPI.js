@@ -10,7 +10,7 @@ import { AUTH_ERRORS } from '../types/auth.types.js';
 // - Android Emulator: 'http://10.0.2.2:5128/api'  
 // - iOS Simulator: 'http://localhost:5128/api'
 // - Real device: 'http://192.168.1.x:5128/api' (thay x bằng IP máy tính)
-const API_BASE_URL = 'http://192.168.1.219:5128/api'; 
+const API_BASE_URL = 'http://192.168.1.84:5128/api'; 
 const AUTH_ENDPOINTS = {
   LOGIN: '/auth/login',
   REFRESH: '/auth/refresh', 
