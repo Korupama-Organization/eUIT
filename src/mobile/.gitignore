@@ -41,3 +41,5 @@ yarn-error.*
 /android
 # Environment files
 .env
+
+launchSettings.json
