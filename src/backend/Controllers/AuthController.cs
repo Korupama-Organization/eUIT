@@ -6,6 +6,7 @@ using System.Data.Common;
 using eUIT.API.DTOs;
 using eUIT.API.Data;
 using eUIT.API.Services;
+using eUIT.API.Models;
 
 namespace eUIT.API.Controllers;
 

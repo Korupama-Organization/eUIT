@@ -1,3 +1,4 @@
+
 /**
  * Auth Types - Định nghĩa các kiểu dữ liệu cho authentication
  */

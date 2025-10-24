@@ -1,115 +1,101 @@
-import React, { useState } from 'react';
-import { 
-  View, 
-  TextInput, 
-  Text, 
-  TouchableOpacity, 
-  StyleSheet 
-} from 'react-native';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react-native";
 
-/**
- * InputField Component - Input field đơn giản cho form đăng nhập
- */
 const InputField = ({
   label,
   value,
   onChangeText,
   placeholder,
-  secureTextEntry = false,
-  keyboardType = 'default',
-  showPasswordToggle = false,
+  secureTextEntry,
+  showPasswordToggle,
   error,
-  style,
-  ...props
+  keyboardType = "default",
+  themeColor = "#0032AF",
+  textColor = "#1F2937",
+  placeholderColor = "#9AA5C4",
 }) => {
-  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible(!isPasswordVisible);
+  const renderIcon = () => {
+    if (label.toLowerCase().includes("mã")) {
+      return <Mail color={themeColor} size={20} strokeWidth={2} />;
+    } else if (label.toLowerCase().includes("mật")) {
+      return <Lock color={themeColor} size={20} strokeWidth={2} />;
+    }
+    return null;
   };
 
   return (
-    <View style={[styles.container, style]}>
-      {/* Label */}
-      {label && (
-        <Text style={styles.label}>{label}</Text>
-      )}
-      
-      {/* Input Container */}
-      <View style={styles.inputContainer}>
+    <View style={styles.container}>
+      <Text style={[styles.label, { color: textColor }]}>{label}</Text>
+
+      <View
+        style={[
+          styles.inputWrapper,
+          { borderBottomColor: themeColor },
+          error && { borderBottomColor: "#EF4444" },
+        ]}
+      >
+        {renderIcon()}
         <TextInput
-          style={styles.textInput}
+          style={[styles.input, { color: textColor }]}
           value={value}
           onChangeText={onChangeText}
           placeholder={placeholder}
-          placeholderTextColor="#999"
-          secureTextEntry={secureTextEntry && !isPasswordVisible}
+          placeholderTextColor={placeholderColor}
+          secureTextEntry={secureTextEntry && !showPassword}
           keyboardType={keyboardType}
           autoCapitalize="none"
-          autoCorrect={false}
-          returnKeyType="done"
-          blurOnSubmit={true}
-          {...props}
         />
-        
-        {/* Password Toggle */}
         {showPasswordToggle && (
-          <TouchableOpacity
-            onPress={togglePasswordVisibility}
-            style={styles.eyeButton}
-          >
-            <Text style={styles.eyeIcon}>
-              {isPasswordVisible ? '�️' : '👁️‍🗨️'}
-            </Text>
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+            {showPassword ? (
+              <EyeOff color={themeColor} size={20} strokeWidth={2} />
+            ) : (
+              <Eye color={themeColor} size={20} strokeWidth={2} />
+            )}
           </TouchableOpacity>
         )}
       </View>
-      
-      {/* Error Message */}
-      {error && (
-        <Text style={styles.errorText}>{error}</Text>
-      )}
+
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginBottom: 15,
-  },
+  container: { marginBottom: 20 },
   label: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
-    marginBottom: 8,
+    fontSize: 14,
+    fontFamily: "Inter",
+    fontWeight: "500",
+    marginBottom: 6,
   },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 8,
-    backgroundColor: '#fff',
-    paddingHorizontal: 15,
-    height: 50,
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderBottomWidth: 1.4,
+    paddingBottom: 8,
+    paddingHorizontal: 4,
   },
-  textInput: {
+  input: {
     flex: 1,
-    fontSize: 16,
-    color: '#333',
-    height: '100%',
-  },
-  eyeButton: {
-    padding: 5,
-    marginLeft: 10,
-  },
-  eyeIcon: {
-    fontSize: 20,
+    fontSize: 14,
+    fontFamily: "Inter",
+    fontWeight: "500",
+    marginLeft: 8,
   },
   errorText: {
-    fontSize: 14,
-    color: '#ff4444',
     marginTop: 5,
+    fontSize: 12,
+    color: "#EF4444",
   },
 });
 

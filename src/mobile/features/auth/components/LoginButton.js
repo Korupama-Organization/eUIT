@@ -1,166 +1,92 @@
-import React from 'react';
-import { 
-  TouchableOpacity, 
-  Text, 
-  ActivityIndicator, 
-  StyleSheet 
-} from 'react-native';
+import React, { useRef } from "react";
+import {
+  TouchableOpacity,
+  Text,
+  StyleSheet,
+  Animated,
+  Easing,
+  ActivityIndicator,
+} from "react-native";
 
-/**
- * LoginButton Component - Nút đăng nhập tùy chỉnh
- * @param {Object} props
- * @param {string} props.title - Text hiển thị trên nút
- * @param {function} props.onPress - Callback khi nhấn nút
- * @param {boolean} props.loading - Trạng thái loading
- * @param {boolean} props.disabled - Trạng thái disable
- * @param {'primary'|'secondary'|'outline'} props.variant - Kiểu nút
- * @param {Object} props.style - Custom style
- */
 const LoginButton = ({
-  title = 'Đăng nhập',
+  title = "Đăng nhập",
   onPress,
   loading = false,
   disabled = false,
-  variant = 'primary',
+  bgColor = "#2F6BFF",
+  textColor = "#FFFFFF",
+  shadowColor = "#0032AF",
   style,
-  ...props
 }) => {
-  const isDisabled = disabled || loading;
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
-  const getButtonStyle = () => {
-    let baseStyle = [styles.button];
-    
-    switch (variant) {
-      case 'primary':
-        baseStyle.push(styles.primaryButton);
-        if (isDisabled) baseStyle.push(styles.disabledButton);
-        break;
-      case 'secondary':
-        baseStyle.push(styles.secondaryButton);
-        if (isDisabled) baseStyle.push(styles.disabledSecondaryButton);
-        break;
-      case 'outline':
-        baseStyle.push(styles.outlineButton);
-        if (isDisabled) baseStyle.push(styles.disabledOutlineButton);
-        break;
-    }
-    
-    return baseStyle;
+  const handlePressIn = () => {
+    Animated.timing(scaleAnim, {
+      toValue: 0.97,
+      duration: 100,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
   };
 
-  const getTextStyle = () => {
-    let baseStyle = [styles.buttonText];
-    
-    switch (variant) {
-      case 'primary':
-        baseStyle.push(styles.primaryButtonText);
-        if (isDisabled) baseStyle.push(styles.disabledButtonText);
-        break;
-      case 'secondary':
-        baseStyle.push(styles.secondaryButtonText);
-        if (isDisabled) baseStyle.push(styles.disabledSecondaryButtonText);
-        break;
-      case 'outline':
-        baseStyle.push(styles.outlineButtonText);
-        if (isDisabled) baseStyle.push(styles.disabledOutlineButtonText);
-        break;
-    }
-    
-    return baseStyle;
+  const handlePressOut = () => {
+    Animated.timing(scaleAnim, {
+      toValue: 1,
+      duration: 100,
+      easing: Easing.out(Easing.ease),
+      useNativeDriver: true,
+    }).start();
   };
 
   return (
-    <TouchableOpacity
-      style={[...getButtonStyle(), style]}
-      onPress={onPress}
-      disabled={isDisabled}
-      activeOpacity={0.8}
-      {...props}
+    <Animated.View
+      style={[
+        styles.shadowWrapper,
+        {
+          shadowColor,
+          transform: [{ scale: scaleAnim }],
+        },
+        style,
+      ]}
     >
-      {loading ? (
-        <ActivityIndicator 
-          size="small" 
-          color={variant === 'primary' ? '#FFFFFF' : '#3B82F6'} 
-        />
-      ) : (
-        <Text style={getTextStyle()}>{title}</Text>
-      )}
-    </TouchableOpacity>
+      <TouchableOpacity
+        onPress={onPress}
+        onPressIn={handlePressIn}
+        onPressOut={handlePressOut}
+        activeOpacity={0.85}
+        disabled={disabled}
+        style={[
+          styles.button,
+          { backgroundColor: bgColor },
+          disabled && { opacity: 0.7 },
+        ]}
+      >
+        {loading ? (
+          <ActivityIndicator color={textColor} />
+        ) : (
+          <Text style={[styles.text, { color: textColor }]}>{title}</Text>
+        )}
+      </TouchableOpacity>
+    </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
+  shadowWrapper: {
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.25,
+    shadowRadius: 10,
+    elevation: 5,
+  },
   button: {
-    borderRadius: 8,
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    minHeight: 50,
+    borderRadius: 10,
+    paddingVertical: 16,
+    alignItems: "center",
   },
-  
-  // Primary Button (Blue)
-  primaryButton: {
-    backgroundColor: '#3B82F6',
-    shadowColor: '#3B82F6',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 3,
-  },
-  disabledButton: {
-    backgroundColor: '#9CA3AF',
-    shadowOpacity: 0,
-    elevation: 0,
-  },
-  
-  // Secondary Button (Gray)
-  secondaryButton: {
-    backgroundColor: '#6B7280',
-  },
-  disabledSecondaryButton: {
-    backgroundColor: '#D1D5DB',
-  },
-  
-  // Outline Button
-  outlineButton: {
-    backgroundColor: 'transparent',
-    borderWidth: 1,
-    borderColor: '#3B82F6',
-  },
-  disabledOutlineButton: {
-    borderColor: '#D1D5DB',
-  },
-  
-  // Text Styles
-  buttonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    textAlign: 'center',
-  },
-  
-  primaryButtonText: {
-    color: '#FFFFFF',
-  },
-  disabledButtonText: {
-    color: '#D1D5DB',
-  },
-  
-  secondaryButtonText: {
-    color: '#FFFFFF',
-  },
-  disabledSecondaryButtonText: {
-    color: '#9CA3AF',
-  },
-  
-  outlineButtonText: {
-    color: '#3B82F6',
-  },
-  disabledOutlineButtonText: {
-    color: '#D1D5DB',
+  text: {
+    fontSize: 18,
+    fontFamily: "Inter",
+    fontWeight: "700",
   },
 });
 
