@@ -42,4 +42,4 @@ $$ LANGUAGE plpgsql;
 
 -- Thêm comment cho function
 
-PRINT 'Tạo bảng refresh_tokens và các index thành công!';
+RAISE NOTICE 'Tạo bảng refresh_tokens và các index thành công!';
