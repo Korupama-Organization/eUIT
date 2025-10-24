@@ -88,9 +88,10 @@ public class TokenService : ITokenService
         };
 
         var tokenHandler = new JwtSecurityTokenHandler();
-        var accessToken = tokenHandler.WriteToken(tokenHandler.CreateToken(tokenDescriptor));
+        var token = tokenHandler.CreateToken(tokenDescriptor);
+         var accessToken = tokenHandler.WriteToken(token);      
 
-        return tokenHandler.WriteToken(token);
+    return accessToken;
     }
 
     public async Task<RefreshToken> CreateRefreshTokenAsync(string userId, string role, string? deviceInfo = null, string? ipAddress = null)
