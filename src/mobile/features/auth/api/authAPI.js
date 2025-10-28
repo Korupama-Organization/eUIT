@@ -2,9 +2,9 @@
  * Auth API - Giao tiếp với backend để xác thực người dùng
  */
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { AUTH_ERRORS } from '../types/auth.types.js';
-import { API_BASE_URL } from '@env';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AUTH_ERRORS } from "../types/auth.types.js";
+import { API_BASE_URL } from "@env";
 
 const AUTH_ENDPOINTS = {
   LOGIN: `${API_BASE_URL}/auth/login`,
@@ -18,10 +18,10 @@ export { AUTH_ENDPOINTS };
 
 // Keys để lưu token trong AsyncStorage
 const STORAGE_KEYS = {
-  ACCESS_TOKEN: '@auth/access_token',
-  REFRESH_TOKEN: '@auth/refresh_token', 
-  ACCESS_TOKEN_EXPIRY: '@auth/access_token_expiry',
-  REFRESH_TOKEN_EXPIRY: '@auth/refresh_token_expiry'
+  ACCESS_TOKEN: "@auth/access_token",
+  REFRESH_TOKEN: "@auth/refresh_token",
+  ACCESS_TOKEN_EXPIRY: "@auth/access_token_expiry",
+  REFRESH_TOKEN_EXPIRY: "@auth/refresh_token_expiry",
 };
 
 /**
@@ -29,7 +29,7 @@ const STORAGE_KEYS = {
  */
 const createHeaders = async (includeAuth = false) => {
   const headers = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   };
 
   if (includeAuth) {
@@ -46,13 +46,14 @@ const createHeaders = async (includeAuth = false) => {
  * Helper function để xử lý response
  */
 const handleResponse = async (response) => {
-  const data = await response.json();
-  
+  const text = await response.text();
+  const data = text ? JSON.parse(text) : null;
+
   if (!response.ok) {
     throw {
       message: data.message || AUTH_ERRORS.SERVER_ERROR,
       status: response.status,
-      data
+      data,
     };
   }
 
@@ -68,10 +69,10 @@ const storeTokens = async (tokens) => {
       [STORAGE_KEYS.ACCESS_TOKEN, tokens.accessToken],
       [STORAGE_KEYS.REFRESH_TOKEN, tokens.refreshToken],
       [STORAGE_KEYS.ACCESS_TOKEN_EXPIRY, tokens.accessTokenExpiry],
-      [STORAGE_KEYS.REFRESH_TOKEN_EXPIRY, tokens.refreshTokenExpiry || '']
+      [STORAGE_KEYS.REFRESH_TOKEN_EXPIRY, tokens.refreshTokenExpiry || ""],
     ]);
   } catch (error) {
-    console.error('Error storing tokens:', error);
+    console.error("Error storing tokens:", error);
     throw error;
   }
 };
@@ -85,10 +86,10 @@ const clearTokens = async () => {
       STORAGE_KEYS.ACCESS_TOKEN,
       STORAGE_KEYS.REFRESH_TOKEN,
       STORAGE_KEYS.ACCESS_TOKEN_EXPIRY,
-      STORAGE_KEYS.REFRESH_TOKEN_EXPIRY
+      STORAGE_KEYS.REFRESH_TOKEN_EXPIRY,
     ]);
   } catch (error) {
-    console.error('Error clearing tokens:', error);
+    console.error("Error clearing tokens:", error);
   }
 };
 
@@ -101,17 +102,17 @@ const getStoredTokens = async () => {
       STORAGE_KEYS.ACCESS_TOKEN,
       STORAGE_KEYS.REFRESH_TOKEN,
       STORAGE_KEYS.ACCESS_TOKEN_EXPIRY,
-      STORAGE_KEYS.REFRESH_TOKEN_EXPIRY
+      STORAGE_KEYS.REFRESH_TOKEN_EXPIRY,
     ]);
 
     return {
       accessToken: tokens[0][1],
       refreshToken: tokens[1][1],
       accessTokenExpiry: tokens[2][1],
-      refreshTokenExpiry: tokens[3][1]
+      refreshTokenExpiry: tokens[3][1],
     };
   } catch (error) {
-    console.error('Error getting stored tokens:', error);
+    console.error("Error getting stored tokens:", error);
     return null;
   }
 };
@@ -122,70 +123,71 @@ const getStoredTokens = async () => {
 
 /**
  * Đăng nhập
- * @param {import('../types/auth.types.js').LoginRequest} credentials 
+ * @param {import('../types/auth.types.js').LoginRequest} credentials
  * @returns {Promise<import('../types/auth.types.js').LoginResponse>}
  */
 export const login = async (credentials) => {
   const fullUrl = AUTH_ENDPOINTS.LOGIN;
-  console.log('🔗 Login URL:', fullUrl);
-  console.log('📤 Login data:', credentials);
-  
+  console.log("🔗 Login URL:", fullUrl);
+  console.log("📤 Login data:", credentials);
+
   try {
     const headers = await createHeaders(false);
-    console.log('📋 Headers:', headers);
-    
+    console.log("📋 Headers:", headers);
+
     // Tạo AbortController để có timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
 
     const response = await fetch(fullUrl, {
-      method: 'POST',
+      method: "POST",
       headers: headers,
       body: JSON.stringify(credentials),
-      signal: controller.signal
+      signal: controller.signal,
     });
 
     clearTimeout(timeoutId);
 
-    console.log('📥 Response status:', response.status);
-    console.log('📥 Response ok:', response.ok);
+    console.log("📥 Response status:", response.status);
+    console.log("📥 Response ok:", response.ok);
 
     const data = await handleResponse(response);
-    console.log('✅ Login success:', data);
-    
+    console.log("✅ Login success:", data);
+
     // Lưu tokens vào AsyncStorage
     await storeTokens(data);
-    
+
     return data;
   } catch (error) {
-    console.error('❌ Login error details:', {
+    console.error("❌ Login error details:", {
       message: error.message,
       status: error.status,
       name: error.name,
-      stack: error.stack
+      stack: error.stack,
     });
-    
+
     // Kiểm tra loại lỗi
-    if (error.name === 'AbortError') {
-      throw { 
-        ...error, 
-        message: 'Request timeout - Server không phản hồi sau 10 giây' 
+    if (error.name === "AbortError") {
+      throw {
+        ...error,
+        message: "Request timeout - Server không phản hồi sau 10 giây",
       };
-    } else if (error.name === 'TypeError' && (
-      error.message.includes('Network request failed') || 
-      error.message.includes('Failed to fetch') ||
-      error.message.includes('fetch is not defined')
-    )) {
-      throw { 
-        ...error, 
-        message: `Network Error - Không kết nối được:\n• Server: ${fullUrl}\n• Kiểm tra: Backend có chạy? Network có ổn?` 
+    } else if (
+      error.name === "TypeError" &&
+      (error.message.includes("Network request failed") ||
+        error.message.includes("Failed to fetch") ||
+        error.message.includes("fetch is not defined"))
+    ) {
+      throw {
+        ...error,
+        message: `Network Error - Không kết nối được:\n• Server: ${fullUrl}\n• Kiểm tra: Backend có chạy? Network có ổn?`,
       };
     } else if (error.status === 401) {
       throw { ...error, message: AUTH_ERRORS.INVALID_CREDENTIALS };
     } else if (!error.status) {
       throw { ...error, message: AUTH_ERRORS.NETWORK_ERROR };
     }
-    
+
     throw error;
   }
 };
@@ -202,34 +204,34 @@ export const refreshToken = async () => {
     }
 
     const response = await fetch(`${API_BASE_URL}${AUTH_ENDPOINTS.REFRESH}`, {
-      method: 'POST',
+      method: "POST",
       headers: await createHeaders(false),
-      body: JSON.stringify({ refreshToken: tokens.refreshToken })
+      body: JSON.stringify({ refreshToken: tokens.refreshToken }),
     });
 
     const data = await handleResponse(response);
-    
+
     // Cập nhật Access Token mới
     await AsyncStorage.multiSet([
       [STORAGE_KEYS.ACCESS_TOKEN, data.accessToken],
-      [STORAGE_KEYS.ACCESS_TOKEN_EXPIRY, data.accessTokenExpiry]
+      [STORAGE_KEYS.ACCESS_TOKEN_EXPIRY, data.accessTokenExpiry],
     ]);
 
     // Nếu có Refresh Token mới, cập nhật luôn
     if (data.refreshToken) {
       await AsyncStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, data.refreshToken);
     }
-    
+
     return data;
   } catch (error) {
-    console.error('Refresh token error:', error);
-    
+    console.error("Refresh token error:", error);
+
     if (error.status === 401) {
       // Refresh token hết hạn, xóa tất cả tokens
       await clearTokens();
       throw { ...error, message: AUTH_ERRORS.TOKEN_EXPIRED };
     }
-    
+
     throw error;
   }
 };
@@ -241,14 +243,14 @@ export const refreshToken = async () => {
 export const getProfile = async () => {
   try {
     const response = await fetch(`${API_BASE_URL}${AUTH_ENDPOINTS.PROFILE}`, {
-      method: 'GET',
-      headers: await createHeaders(true)
+      method: "GET",
+      headers: await createHeaders(true),
     });
 
     return await handleResponse(response);
   } catch (error) {
-    console.error('Get profile error:', error);
-    
+    console.error("Get profile error:", error);
+
     if (error.status === 401) {
       // Token không hợp lệ, thử refresh
       try {
@@ -259,7 +261,7 @@ export const getProfile = async () => {
         throw { ...refreshError, message: AUTH_ERRORS.TOKEN_EXPIRED };
       }
     }
-    
+
     throw error;
   }
 };
@@ -271,18 +273,18 @@ export const getProfile = async () => {
 export const logout = async () => {
   try {
     const tokens = await getStoredTokens();
-    
+
     if (tokens?.refreshToken) {
       // Gọi API logout để revoke refresh token
       await fetch(`${API_BASE_URL}${AUTH_ENDPOINTS.LOGOUT}`, {
-        method: 'POST',
+        method: "POST",
         headers: await createHeaders(true),
-        body: JSON.stringify({ refreshToken: tokens.refreshToken })
+        body: JSON.stringify({ refreshToken: tokens.refreshToken }),
       });
     }
   } catch (error) {
     // Ignore errors khi logout, vẫn xóa token local
-    console.error('Logout API error (ignored):', error);
+    console.error("Logout API error (ignored):", error);
   } finally {
     // Luôn xóa tokens local
     await clearTokens();
@@ -296,11 +298,11 @@ export const logout = async () => {
 export const logoutAll = async () => {
   try {
     await fetch(`${API_BASE_URL}${AUTH_ENDPOINTS.LOGOUT_ALL}`, {
-      method: 'POST',
-      headers: await createHeaders(true)
+      method: "POST",
+      headers: await createHeaders(true),
     });
   } catch (error) {
-    console.error('Logout all API error (ignored):', error);
+    console.error("Logout all API error (ignored):", error);
   } finally {
     await clearTokens();
   }
@@ -333,7 +335,7 @@ export const isAuthenticated = async () => {
 
     return true;
   } catch (error) {
-    console.error('Check authentication error:', error);
+    console.error("Check authentication error:", error);
     return false;
   }
 };
