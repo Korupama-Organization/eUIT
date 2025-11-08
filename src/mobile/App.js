@@ -9,8 +9,6 @@ import { Feather } from "@expo/vector-icons";
 import LoginScreen from "./features/auth/screens/LoginScreen";
 import HomeScreen from "./features/auth/screens/HomeScreen";
 import { isAuthenticated } from "./features/auth/api/authAPI";
-
-// Import Stack Navigator cho phần Tra Cứu (Lookup)
 import LookupStack from "./features/students/screens/LookupStack";
 
 // Các màn hình giả (placeholder)
@@ -29,7 +27,6 @@ function ScheduleScreen() {
   );
 }
 
-// Xóa LookupScreen() placeholder vì đã được thay thế bằng LookupStack
 
 function SettingsScreen() {
   return (
