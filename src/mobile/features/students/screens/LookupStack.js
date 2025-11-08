@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 // --- 1. Import các Màn hình (Screens) ---
 // Màn hình gốc của luồng Lookup (Màn hình Tra cứu tổng hợp)
-import LookupScreen from '../../auth/screens/LookupScreen'; 
+import LookupScreen from './LookupScreen'; 
 // Màn hình chi tiết kết quả học tập
 import AcademicResultScreen from './AcademicResultScreen'; 
 
