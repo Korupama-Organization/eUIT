@@ -10,6 +10,7 @@ export const lightTheme = {
   tabActive: "#1900ffff",
   tabInactive: "#888888",
   accent: "#2c3e5f",
+  iconBg: "#EFF6FF",
 };
 
 export const darkTheme = {
@@ -24,4 +25,5 @@ export const darkTheme = {
   tabActive: "#5ce1e6",
   tabInactive: "#777777",
   accent: "#2c3e5f",
+  iconBg: "#1E3A5F",
 };

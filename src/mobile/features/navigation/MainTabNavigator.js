@@ -3,7 +3,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { View, StyleSheet, TouchableOpacity } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useTheme } from "../../App";
+import { useTheme } from "../../theme/ThemeProvider";
 
 // Import màn hình
 import HomeScreen from "../../features/auth/screens/HomeScreen";

@@ -1,24 +1,13 @@
 // src/mobile/App.js
-import React, { useEffect, useState, createContext, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import AppNavigator from "./features/navigation/AppNavigator";
 import { isAuthenticated } from "./features/auth/api/authAPI";
-import { darkTheme, lightTheme } from "./theme/theme";
-
-// ----- Tạo Context Theme -----
-export const ThemeContext = createContext();
-export const useTheme = () => useContext(ThemeContext);
-
+import { ThemeProvider } from "./theme/ThemeProvider";
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
-  // Trạng thái theme
-  const [theme, setTheme] = useState(darkTheme);
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === darkTheme ? lightTheme : darkTheme));
-  };
 
   useEffect(() => {
     checkAuthStatus();
@@ -37,9 +26,10 @@ export default function App() {
   };
 
   if (isLoading) {
+    // Đoạn này có thể dùng màu cứng hoặc import theme từ ThemeProvider
     return (
-      <View style={[styles.center, { backgroundColor: theme.background }]}>
-        <Text style={{ fontSize: 18, color: theme.textPrimary }}>
+      <View style={[styles.center, { backgroundColor: "#fff" }]}>
+        <Text style={{ fontSize: 18, color: "#000" }}>
           Đang kiểm tra đăng nhập...
         </Text>
       </View>
@@ -47,11 +37,11 @@ export default function App() {
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeProvider>
       <NavigationContainer>
         <AppNavigator isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
       </NavigationContainer>
-    </ThemeContext.Provider>
+    </ThemeProvider>
   );
 }
 

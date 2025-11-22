@@ -8,7 +8,7 @@ import {
   TextInput,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useTheme } from "../../../App";
+import { useTheme } from "../../../theme/ThemeProvider";
 
 const ScheduleScreen = () => {
   const { theme } = useTheme(); // Sử dụng theme

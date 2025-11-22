@@ -9,7 +9,8 @@ using Microsoft.Extensions.FileProviders;
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Thêm dịch vụ vào ứng dụng ---
-
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 // Thêm dịch vụ Controllers
 builder.Services.AddControllers();
 
@@ -80,11 +81,9 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 
 // --- Cấu hình pipeline xử lý request ---
-if (app.Environment.IsDevelopment())
-{
+
     app.UseSwagger();
     app.UseSwaggerUI();
-}
 
 app.UseStaticFiles(new StaticFileOptions
 {

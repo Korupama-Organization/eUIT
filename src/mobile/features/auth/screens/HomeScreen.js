@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getProfile } from "../api/authAPI.js";
-import { useTheme } from "../../../App";
+import { getCurrentGiangVien } from "../api/lectureAPI";
+import { useTheme } from "../../../theme/ThemeProvider";
 
 export default function HomeScreen() {
   const { theme } = useTheme(); // Sử dụng theme
@@ -20,8 +20,8 @@ export default function HomeScreen() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const userData = await getProfile();
-        setProfile(userData);
+        const gv = await getCurrentGiangVien();
+        setProfile(gv);
       } catch (error) {
         console.error("❌ Lỗi khi lấy thông tin người dùng:", error);
       } finally {
