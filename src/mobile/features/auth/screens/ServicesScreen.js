@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { useTheme } from "../../../App";
+import { useTheme } from "../../../theme/ThemeProvider";
 
 export default function ServicesScreen() {
   const { theme } = useTheme();

@@ -7,16 +7,30 @@ import {
   Switch,
   TouchableOpacity,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useTheme } from "../../../App";
+import { useTheme } from "../../../theme/ThemeProvider";
+import { logout } from "../api/authAPI";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  Moon,
+  Bell,
+  BookOpen,
+  Coffee,
+  RefreshCw,
+  Calendar,
+  ClipboardList,
+  Mail,
+  LogOut,
+  ChevronRight,
+} from "lucide-react-native";
 
 const SettingsScreen = ({ setIsLoggedIn }) => {
   const navigation = useNavigation();
-  const { theme, toggleTheme, isDarkMode } = useTheme(); // Sử dụng theme
+  const { theme, toggleTheme, isDarkMode } = useTheme();
+  const [loggingOut, setLoggingOut] = useState(false);
 
-  // State cho các switch
-  const [darkMode, setDarkMode] = useState(false);
   const [notifications, setNotifications] = useState({
     courseProgress: true,
     teachingBreak: true,
@@ -25,36 +39,49 @@ const SettingsScreen = ({ setIsLoggedIn }) => {
     newNotifications: true,
     administrativeUpdates: false,
   });
+
   const [emailNotifications, setEmailNotifications] = useState({
     allEmails: false,
-    account: true,
   });
 
-  // Hàm xử lý toggle theme
   const handleThemeToggle = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(!darkMode);
-    toggleTheme(); // Gọi toggleTheme từ context
+    toggleTheme();
   };
 
-  // Hàm xử lý đăng xuất
   const handleLogout = () => {
-    Alert.alert("Đăng xuất", "Bạn có chắc chắn muốn đăng xuất?", [
-      {
-        text: "Hủy",
-        style: "cancel",
-      },
-      {
-        text: "Đăng xuất",
-        style: "destructive",
-        onPress: () => {
-          setIsLoggedIn(false);
+    Alert.alert(
+      "Đăng xuất",
+      "Bạn có chắc chắn muốn đăng xuất?",
+      [
+        {
+          text: "Hủy",
+          style: "cancel",
         },
-      },
-    ]);
+        {
+          text: "Đăng xuất",
+          style: "destructive",
+          onPress: async () => {
+            setLoggingOut(true);
+            try {
+              console.log("🔵 [LOGOUT] Đang đăng xuất...");
+              await logout();
+              await AsyncStorage.clear();
+              setIsLoggedIn(false);
+              console.log("✅ [LOGOUT] Đăng xuất thành công");
+            } catch (error) {
+              console.error("❌ [LOGOUT] Error:", error);
+              await AsyncStorage.clear();
+              setIsLoggedIn(false);
+            } finally {
+              setLoggingOut(false);
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
-  // Hàm toggle notification
   const toggleNotification = (key) => {
     setNotifications((prev) => ({
       ...prev,
@@ -62,7 +89,6 @@ const SettingsScreen = ({ setIsLoggedIn }) => {
     }));
   };
 
-  // Hàm toggle email notification
   const toggleEmailNotification = (key) => {
     setEmailNotifications((prev) => ({
       ...prev,
@@ -87,68 +113,81 @@ const SettingsScreen = ({ setIsLoggedIn }) => {
 
       {/* Màn hình Section */}
       <View style={[styles.section, { backgroundColor: theme.card }]}>
-        <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
-          Màn hình
-        </Text>
-        <Text
-          style={[styles.sectionDescription, { color: theme.textSecondary }]}
-        >
-          Chỉnh chính giao diện để giảm độ chói
-        </Text>
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
+            Màn hình
+          </Text>
+          <Text
+            style={[styles.sectionDescription, { color: theme.textSecondary }]}
+          >
+            Chỉnh chính giao diện để giảm độ chói
+          </Text>
+        </View>
 
-        <View style={[styles.divider, { backgroundColor: theme.border }]} />
-
-        {/* Chế độ tối */}
         <View style={styles.settingItem}>
-          <View style={styles.settingInfo}>
+          <View style={styles.settingLeft}>
+            <View
+              style={[styles.iconContainer, { backgroundColor: theme.iconBg }]}
+            >
+              <Moon size={20} color={theme.primary} />
+            </View>
             <Text style={[styles.settingTitle, { color: theme.textPrimary }]}>
               Chế độ sáng
             </Text>
           </View>
           <Switch
-            value={darkMode}
+            value={isDarkMode}
             onValueChange={handleThemeToggle}
-            trackColor={{ false: "#E5E7EB", true: "#2F6BFF" }}
-            thumbColor={darkMode ? "#FFFFFF" : "#FFFFFF"}
+            trackColor={{ false: "#D1D5DB", true: "#2F6BFF" }}
+            thumbColor="#FFFFFF"
+            ios_backgroundColor="#D1D5DB"
           />
         </View>
-
-        <View style={[styles.divider, { backgroundColor: theme.border }]} />
       </View>
 
       {/* Thông báo đẩy Section */}
       <View style={[styles.section, { backgroundColor: theme.card }]}>
-        <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
-          Thông báo đẩy
-        </Text>
-        <Text
-          style={[styles.sectionDescription, { color: theme.textSecondary }]}
-        >
-          Tùy chọn những thông báo nào sẽ được đẩy lên
-        </Text>
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
+            Thông báo đẩy
+          </Text>
+          <Text
+            style={[styles.sectionDescription, { color: theme.textSecondary }]}
+          >
+            Tùy chọn những thông báo nào sẽ được đẩy lên
+          </Text>
+        </View>
 
-        <View style={[styles.divider, { backgroundColor: theme.border }]} />
-
-        {/* Danh sách thông báo */}
         {[
-          { key: "courseProgress", label: "Cập nhật tiến độ khóa học" },
-          { key: "teachingBreak", label: "Thông báo nghỉ dạy" },
-          { key: "makeUpClass", label: "Thông báo học bù" },
-          { key: "schedule", label: "Lịch học" },
-          { key: "newNotifications", label: "Thông báo mới" },
+          {
+            key: "courseProgress",
+            label: "Cập nhật tiến độ khóa học",
+            icon: BookOpen,
+          },
+          { key: "teachingBreak", label: "Thông báo nghỉ dạy", icon: Coffee },
+          { key: "makeUpClass", label: "Thông báo học bù", icon: RefreshCw },
+          { key: "schedule", label: "Lịch học", icon: Calendar },
+          { key: "newNotifications", label: "Thông báo mới", icon: Bell },
           {
             key: "administrativeUpdates",
-            label: "Cập nhật trong thái thú tục hành chính",
+            label: "Cập nhật trạng thái thủ tục hành chính",
+            icon: ClipboardList,
           },
-        ].map((item, index) => (
-          <View key={item.key}>
-            <View style={styles.notificationItem}>
-              <View style={styles.notificationInfo}>
-                <Text
+        ].map((item) => {
+          const IconComponent = item.icon;
+          return (
+            <View key={item.key} style={styles.settingItem}>
+              <View style={styles.settingLeft}>
+                <View
                   style={[
-                    styles.notificationTitle,
-                    { color: theme.textPrimary },
+                    styles.iconContainer,
+                    { backgroundColor: theme.iconBg },
                   ]}
+                >
+                  <IconComponent size={20} color={theme.primary} />
+                </View>
+                <Text
+                  style={[styles.settingTitle, { color: theme.textPrimary }]}
                 >
                   {item.label}
                 </Text>
@@ -156,86 +195,83 @@ const SettingsScreen = ({ setIsLoggedIn }) => {
               <Switch
                 value={notifications[item.key]}
                 onValueChange={() => toggleNotification(item.key)}
-                trackColor={{ false: "#E5E7EB", true: "#2F6BFF" }}
-                thumbColor={notifications[item.key] ? "#FFFFFF" : "#FFFFFF"}
+                trackColor={{ false: "#D1D5DB", true: "#2F6BFF" }}
+                thumbColor="#FFFFFF"
+                ios_backgroundColor="#D1D5DB"
               />
             </View>
-            {index < 5 && (
-              <View
-                style={[styles.divider, { backgroundColor: theme.border }]}
-              />
-            )}
-          </View>
-        ))}
+          );
+        })}
       </View>
 
       {/* Thông báo email Section */}
       <View style={[styles.section, { backgroundColor: theme.card }]}>
-        <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
-          Thông báo email
-        </Text>
-        <Text
-          style={[styles.sectionDescription, { color: theme.textSecondary }]}
-        >
-          Tùy chọn các thông báo email
-        </Text>
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
+            Thông báo email
+          </Text>
+          <Text
+            style={[styles.sectionDescription, { color: theme.textSecondary }]}
+          >
+            Tùy chọn các thông báo email
+          </Text>
+        </View>
 
-        <View style={[styles.divider, { backgroundColor: theme.border }]} />
-
-        {/* Tất cả thông báo email */}
-        <View style={styles.notificationItem}>
-          <View style={styles.notificationInfo}>
-            <Text
-              style={[styles.notificationTitle, { color: theme.textPrimary }]}
+        <View style={styles.settingItem}>
+          <View style={styles.settingLeft}>
+            <View
+              style={[styles.iconContainer, { backgroundColor: theme.iconBg }]}
             >
-              Tất cả thông báo email
+              <Mail size={20} color={theme.primary} />
+            </View>
+            <Text style={[styles.settingTitle, { color: theme.textPrimary }]}>
+              Bật thông báo email
             </Text>
           </View>
           <Switch
             value={emailNotifications.allEmails}
             onValueChange={() => toggleEmailNotification("allEmails")}
-            trackColor={{ false: "#E5E7EB", true: "#2F6BFF" }}
-            thumbColor={emailNotifications.allEmails ? "#FFFFFF" : "#FFFFFF"}
+            trackColor={{ false: "#D1D5DB", true: "#2F6BFF" }}
+            thumbColor="#FFFFFF"
+            ios_backgroundColor="#D1D5DB"
           />
         </View>
-
-        <View style={[styles.divider, { backgroundColor: theme.border }]} />
-
-        {/* Tài khoản */}
-        <View style={styles.notificationItem}>
-          <View style={styles.notificationInfo}>
-            <Text
-              style={[styles.notificationTitle, { color: theme.textPrimary }]}
-            >
-              Tài khoản
-            </Text>
-            <Text
-              style={[
-                styles.notificationDescription,
-                { color: theme.textSecondary },
-              ]}
-            >
-              Quản lý các chỉ đặt về tài khoản
-            </Text>
-          </View>
-          <Switch
-            value={emailNotifications.account}
-            onValueChange={() => toggleEmailNotification("account")}
-            trackColor={{ false: "#E5E7EB", true: "#2F6BFF" }}
-            thumbColor={emailNotifications.account ? "#FFFFFF" : "#FFFFFF"}
-          />
-        </View>
-
-        <View style={[styles.divider, { backgroundColor: theme.border }]} />
       </View>
 
-      {/* Nút Đăng xuất */}
-      <View style={styles.logoutSection}>
+      {/* Tài khoản Section - ĐÃ CHỈNH ĐẸP HƠN */}
+      <View style={[styles.section, { backgroundColor: theme.card }]}>
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
+            Tài khoản
+          </Text>
+          <Text
+            style={[styles.sectionDescription, { color: theme.textSecondary }]}
+          >
+            Quản lý các chỉ đặt về tài khoản
+          </Text>
+        </View>
+
         <TouchableOpacity
-          style={[styles.logoutButton, { backgroundColor: "#EF4444" }]}
+          style={styles.logoutItem}
           onPress={handleLogout}
+          activeOpacity={0.7}
+          disabled={loggingOut}
         >
-          <Text style={styles.logoutButtonText}>Đăng xuất</Text>
+          <View style={styles.settingLeft}>
+            <View
+              style={[styles.iconContainer, { backgroundColor: "#FEE2E2" }]}
+            >
+              {loggingOut ? (
+                <ActivityIndicator size="small" color="#EF4444" />
+              ) : (
+                <LogOut size={20} color="#EF4444" />
+              )}
+            </View>
+            <Text style={[styles.logoutText]}>
+              {loggingOut ? "Đang đăng xuất..." : "Log Out"}
+            </Text>
+          </View>
+          <ChevronRight size={20} color={theme.textSecondary} />
         </TouchableOpacity>
       </View>
 
@@ -251,97 +287,79 @@ const styles = StyleSheet.create({
   },
   header: {
     paddingHorizontal: 20,
-    paddingTop: 20,
-    paddingBottom: 10,
+    paddingTop: 16,
+    paddingBottom: 12,
   },
   headerTitle: {
-    fontSize: 28,
-    fontWeight: "bold",
+    fontSize: 26,
+    fontWeight: "700",
     marginBottom: 4,
   },
   headerSubtitle: {
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 20,
   },
   section: {
-    marginTop: 8,
-    paddingVertical: 8,
+    marginTop: 12,
+    marginHorizontal: 16,
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 0,
+  },
+  sectionHeader: {
+    paddingHorizontal: 16,
+    paddingBottom: 8,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 17,
     fontWeight: "600",
-    paddingHorizontal: 20,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   sectionDescription: {
-    fontSize: 14,
-    paddingHorizontal: 20,
-    marginBottom: 12,
+    fontSize: 13,
     lineHeight: 18,
-  },
-  divider: {
-    height: 1,
-    marginHorizontal: 20,
+    opacity: 0.8,
   },
   settingItem: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
   },
-  settingInfo: {
-    flex: 1,
-  },
-  settingTitle: {
-    fontSize: 16,
-    fontWeight: "500",
-  },
-  notificationItem: {
+  settingLeft: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    paddingHorizontal: 20,
-    paddingVertical: 16,
-  },
-  notificationInfo: {
+    alignItems: "center",
     flex: 1,
+  },
+  iconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
     marginRight: 12,
   },
-  notificationTitle: {
-    fontSize: 16,
+  settingTitle: {
+    fontSize: 15,
     fontWeight: "500",
-    marginBottom: 2,
+    flex: 1,
   },
-  notificationDescription: {
-    fontSize: 14,
-    lineHeight: 18,
-  },
-  logoutSection: {
-    paddingHorizontal: 20,
-    paddingTop: 24,
-    paddingBottom: 40,
-  },
-  logoutButton: {
-    borderRadius: 10,
-    paddingVertical: 16,
+  logoutItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    shadowColor: "#EF4444",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    paddingVertical: 10,
+    paddingHorizontal: 16,
   },
-  logoutButtonText: {
-    color: "#FFFFFF",
-    fontSize: 18,
+  logoutText: {
+    fontSize: 15,
     fontWeight: "600",
+    flex: 1,
+    color: "#EF4444",
   },
   bottomSpace: {
-    height: 20,
+    height: 100,
   },
 });
 

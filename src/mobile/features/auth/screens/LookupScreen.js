@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
-import { useTheme } from "../../../App";
+import { useTheme } from "../../../theme/ThemeProvider";
 
 const LookupScreen = () => {
   const { theme } = useTheme(); // Sử dụng theme
