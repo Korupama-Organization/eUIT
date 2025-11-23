@@ -1,24 +1,16 @@
 // src/mobile/App.js
-import React, { useEffect, useState, createContext, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import AppNavigator from "./features/navigation/AppNavigator";
+import AppNavigator from "./navigation/AppNavigator";
 import { isAuthenticated } from "./features/auth/api/authAPI";
-import { darkTheme, lightTheme } from "./theme/theme";
-
-// ----- Tạo Context Theme -----
-export const ThemeContext = createContext();
-export const useTheme = () => useContext(ThemeContext);
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemeProvider, useTheme } from "./theme/ThemeProvider"; // ✅ import đúng ThemeProvider
 
 export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userRole, setUserRole] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  // Trạng thái theme
-  const [theme, setTheme] = useState(darkTheme);
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === darkTheme ? lightTheme : darkTheme));
-  };
 
   useEffect(() => {
     checkAuthStatus();
@@ -27,6 +19,8 @@ export default function App() {
   const checkAuthStatus = async () => {
     try {
       const authenticated = await isAuthenticated();
+      const savedRole = await AsyncStorage.getItem("userRole");
+      setUserRole(savedRole);
       setIsLoggedIn(authenticated);
     } catch (error) {
       console.error("Auth check error:", error);
@@ -38,8 +32,8 @@ export default function App() {
 
   if (isLoading) {
     return (
-      <View style={[styles.center, { backgroundColor: theme.background }]}>
-        <Text style={{ fontSize: 18, color: theme.textPrimary }}>
+      <View style={[styles.center, { backgroundColor: "#fff" }]}>
+        <Text style={{ fontSize: 18, color: "#333" }}>
           Đang kiểm tra đăng nhập...
         </Text>
       </View>
@@ -47,11 +41,16 @@ export default function App() {
   }
 
   return (
-    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+    <ThemeProvider>
       <NavigationContainer>
-        <AppNavigator isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        <AppNavigator
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
+          userRole={userRole}
+          setUserRole={setUserRole}
+        />
       </NavigationContainer>
-    </ThemeContext.Provider>
+    </ThemeProvider>
   );
 }
 

@@ -64,7 +64,7 @@ public class StudentsController : ControllerBase
     }
 
     // GET: api/students/nextclass
-    [HttpGet("/nextclass")]
+    [HttpGet("nextclass")]
     public async Task<ActionResult<NextClassDto>> GetNextClass()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -101,7 +101,7 @@ public class StudentsController : ControllerBase
     }
 
     // GET: api/students/card
-    [HttpGet("/card")]
+    [HttpGet("card")]
     public async Task<ActionResult<StudentCardDto>> GetStudentCard()
     {
         // Bước 1: Xác định người dùng đang thực hiện yêu cầu từ Token
@@ -155,7 +155,7 @@ public class StudentsController : ControllerBase
     /// <summary>
     /// Retrieves the quick GPA and accumulated credits for the currently authenticated student.
     /// </summary>
-    [HttpGet("/quickgpa")]
+    [HttpGet("quickgpa")]
     public async Task<ActionResult<QuickGpaDto>> GetQuickGpa()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -188,7 +188,7 @@ public class StudentsController : ControllerBase
 
 
     // GET: api/students/academicresults
-    [HttpGet("/academicresults")]
+    [HttpGet("academicresults")]
     public async Task<ActionResult<IEnumerable<AcademicResultDTO>>> GetAcademicResults()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
