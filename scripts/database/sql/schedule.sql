@@ -107,4 +107,24 @@ SELECT * FROM get_full_schedule(23520541, '2025_2026_1') ORDER BY ngay_hoc, tiet
 SELECT ma_lop, ngay_hoc, tiet_bat_dau 
 FROM get_full_schedule(23520541, '2025_2026_1') 
 WHERE ma_lop LIKE '%IE104%'
+<<<<<<< HEAD
 ORDER BY ngay_hoc, tiet_bat_dau;
+=======
+ORDER BY ngay_hoc, tiet_bat_dau;
+
+DELETE FROM thoi_khoa_bieu
+WHERE ctid IN (
+    SELECT ctid FROM (
+        SELECT 
+            ctid,
+            ROW_NUMBER() OVER(
+                PARTITION BY 
+                    hoc_ky, ma_mon_hoc, ma_lop, ma_giang_vien,
+                    thu, tiet_bat_dau, tiet_ket_thuc
+                ORDER BY ctid
+            ) AS rn
+        FROM thoi_khoa_bieu
+    ) AS x
+    WHERE rn > 1
+);
+>>>>>>> backup-main

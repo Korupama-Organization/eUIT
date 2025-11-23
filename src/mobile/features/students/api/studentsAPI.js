@@ -5,6 +5,7 @@
  */
 
 import { API_BASE_URL } from '@env';
+// ĐÃ SỬA ĐƯỜNG DẪN: '../../auth/api/authAPI' để đi từ students/api/ lên features/ rồi vào auth/api/
 import { 
     getStoredTokens, 
     refreshToken, 
@@ -18,6 +19,7 @@ const STUDENT_ENDPOINTS = {
     STUDENT_CARD: `${API_BASE_URL}/students/card`,
     QUICK_GPA: `${API_BASE_URL}/students/quickgpa`,
     ACADEMIC_RESULTS: `${API_BASE_URL}/students/academicresults`,
+    ACADEMIC_SCHEDULE: `${API_BASE_URL}/students/schedule`,
 };
 
 /**
@@ -194,3 +196,21 @@ export const getAcademicResults = async () => {
     console.log('Fetching academic results...');
     return fetchWithAuth(STUDENT_ENDPOINTS.ACADEMIC_RESULTS, { method: 'GET' });
 };
+
+/**
+ * 5. Lấy lịch học đầy đủ cho một học kỳ cụ thể.
+ * Endpoint: GET /schedule/{hocKy}
+ * @param {string} hocKy 
+ * @returns {Promise<Array<object> | null>} Mảng FullScheduleDto hoặc null nếu 204.
+ */
+export const getAcademicSchedule = async (hocKy) => {
+    if (!hocKy) {
+        throw new Error("hocKy parameter is required for getAcademicSchedule.");
+    }
+    console.log(`Fetching full schedule for semester ${hocKy}...`);
+    
+    const url = `${STUDENT_ENDPOINTS.ACADEMIC_SCHEDULE}/${hocKy}`; 
+    
+    return fetchWithAuth(url, { method: 'GET' });
+};
+
