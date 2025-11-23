@@ -8,7 +8,6 @@ using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // --- Thêm dịch vụ vào ứng dụng ---
 
 // Thêm dịch vụ Controllers
@@ -21,7 +20,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                .GetBytes(builder.Configuration["Jwt:Key"])),
+                .GetBytes(builder.Configuration["Jwt:Key"]!)),
             ValidateIssuer = true,
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidateAudience = true,
@@ -30,7 +29,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddScoped<eUIT.API.Services.ITokenService, eUIT.API.Services.TokenService>();
+builder.Services.AddScoped<eUIT.API.Services.IChatbotService, eUIT.API.Services.ChatbotService>();
 
+// Background service để dọn dẹp token hết hạn
+builder.Services.AddHostedService<eUIT.API.Services.TokenCleanupService>();
+
+// Thêm HttpClient cho Gemini AI
+builder.Services.AddHttpClient();
 
 // Lấy chuỗi kết nối từ file appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("eUITDatabase");
@@ -100,4 +105,3 @@ app.MapControllers();
 
 
 app.Run();
-

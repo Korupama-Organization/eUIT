@@ -302,7 +302,6 @@ SELECT * FROM func_get_class_grade_list('IT001.O11')
 --   p_mssv INT: Mã số sinh viên cần tra cứu.
 -- Trả về: Một hàng chứa thông tin lớp học tiếp theo (hoặc rỗng nếu không có).
 -- ---------------------------------------------------------------------------------
-DROP FUNCTION IF EXISTS func_get_next_class(INT);
 CREATE OR REPLACE FUNCTION func_get_next_class(
     p_mssv INT
 )
@@ -382,8 +381,14 @@ FROM Valid AS v
 ORDER BY v.next_date
 LIMIT 1;
 $$;
-
-----------------------------------------------------------------------------------
+-- ---------------------------------------------------------------------------------
+-- HÀM 7: Lấy bảng điểm chi tiết (bao gồm từng thành phần điểm) của TOÀN BỘ môn học mà sinh viên đã học.
+-- ---------------------------------------------------------------------------------
+-- Mục đích: Trả về toàn bộ lịch sử học tập của một sinh viên, bao gồm chi tiết từng thành phần điểm và trọng số.
+-- Tham số:
+--   p_mssv INT: Mã số sinh viên cần tra cứu.
+-- Trả về: Một bảng, mỗi hàng là một môn học đã học, sắp xếp theo học kỳ, với đầy đủ chi tiết điểm.
+-- ---------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION chi_tiet_ket_qua_hoc_tap(
     p_mssv INT
 )
@@ -432,3 +437,4 @@ $$;
 
 -- Ví dụ sử dụng:
 -- SELECT * FROM chi_tiet_ket_qua_hoc_tap(23520541);
+

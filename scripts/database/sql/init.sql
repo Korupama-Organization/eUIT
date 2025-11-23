@@ -1,32 +1,26 @@
 -- Import du lieu sinh vien
-ALTER TABLE sinh_vien
-DROP COLUMN anh_the_url;
-
 COPY sinh_vien
-FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\sinh_vien.csv'
+FROM 'eUIT/scripts/database/data/sinh_vien.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
 
 -- Import du lieu mon hoc
 COPY mon_hoc
-FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\danh_muc_mon_hoc.csv'
+FROM 'D:\eUIT\scripts\database\data\danh_muc_mon_hoc.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
 
 -- Import du lieu dieu kien mon hoc
-copy dieu_kien_mon_hoc
-FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\dieu_kien_mon_hoc.csv'
+copy select * from dieu_kien_mon_hoc
+FROM 'D:\eUIT\scripts\database\data\dieu_kien_mon_hoc.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
 -- Import du lieu giang vien
-ALTER TABLE giang_vien
-ALTER COLUMN so_dien_thoai TYPE VARCHAR(15);
-
 COPY giang_vien
-FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\giang_vien.csv'
+FROM 'D:\eUIT\scripts\database\data\giang_vien.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
     copy thoi_khoa_bieu
-FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\thoi_khoa_bieu_fixed.csv'
+FROM 'D:\eUIT\scripts\database\main_data\thoi_khoa_bieu.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
  copy thoi_khoa_bieu
@@ -34,8 +28,9 @@ FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\kq_dkhp_with_gv.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
 
 
+
     copy bang_diem
-    FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\bang_diem.csv'
+    FROM 'D:\eUIT\scripts\database\main_data\bang_diem.csv'
     WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
 
@@ -44,32 +39,12 @@ where nganh_hoc in ('Công nghệ thông tin',  'Công nghệ thông tin - Đị
 and khoa_hoc = 23;
 
     -- Import du lieu cot ma_lop, mssv, diem_qua_trinh, diem_giua_ki, diem_thuc_hanh, diem_cuoi_ki vao bang ket_qua_hoc_tap
-alter table ket_qua_hoc_tap
-alter column ma_lop_goc type VARCHAR(20);
-
-ALTER TABLE ket_qua_hoc_tap
-DROP CONSTRAINT ket_qua_hoc_tap_pkey;
--- 1. Drop foreign key cũ
-ALTER TABLE ket_qua_hoc_tap
-DROP CONSTRAINT ket_qua_hoc_tap_ma_lop_fkey;  -- tên FK cũ, nếu không biết dùng query pg_constraint để tìm
-
--- 2. Tạo FK mới từ ma_lop_goc
-ALTER TABLE ket_qua_hoc_tap
-ADD CONSTRAINT ket_qua_hoc_tap_ma_lop_goc_fkey
-FOREIGN KEY (ma_lop_goc) REFERENCES bang_diem(ma_lop);
-
-ALTER TABLE ket_qua_hoc_tap
-ADD CONSTRAINT ket_qua_hoc_tap_pkey
-PRIMARY KEY (ma_lop, mssv, ma_lop_goc);
-
 copy ket_qua_hoc_tap (ma_lop, mssv, ma_lop_goc, diem_qua_trinh, diem_giua_ki, diem_thuc_hanh, diem_cuoi_ki, ghi_chu)
-FROM 'D:\eUIT-master\eUIT-master\scripts\database\other_data\ket_qua_hoc_tap_mau.csv'
+FROM 'D:\eUIT\scripts\database\other_data\ket_qua_hoc_tap_mau.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
-DELETE FROM ket_qua_hoc_tap;
-
 copy ket_qua_hoc_tap (ma_lop, mssv, ma_lop_goc, diem_qua_trinh, diem_giua_ki, diem_thuc_hanh, diem_cuoi_ki, ghi_chu)
-FROM 'D:\eUIT-master\eUIT-master\scripts\database\other_data\ket_qua_hoc_tap_mau_expanded.csv'
+FROM 'D:\eUIT\scripts\database\other_data\ket_qua_hoc_tap_mau_expanded.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
 
@@ -92,8 +67,11 @@ DELETE FROM bang_diem;
 DELETE FROM ket_qua_hoc_tap;
 DELETE FROM hoc_phi;
 
-SELECT auth_authenticate('student', '23520541', 'PasswordA1!'); -- TRUE
+copy hoat_dong_ren_luyen FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\hoat_dong_ren_luyen.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
-SELECT * FROM func_get_student_semester_transcript(23520541, '2024_2025_1');
+copy tieu_chi FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\tieu_chi.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
-SELECT * FROM func_get_student_full_transcript(23520545)
+copy chi_tiet_hoat_dong_ren_luyen FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\chi_tiet_hoat_dong_ren_luyen.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');

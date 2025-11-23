@@ -4,12 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using eUIT.API.Data;
 using eUIT.API.DTOs;
 using System.Security.Claims;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eUIT.API.Controllers;
 
-[Authorize] // Yêu cầu tất cả các API trong controller này đều phải được xác thực
+[Authorize]
 [ApiController]
-[Route("api/[controller]")] // Đường dẫn sẽ là /api/students
+[Route("api/[controller]")]
 public class StudentsController : ControllerBase
 {
     private readonly eUITDbContext _context;
@@ -19,205 +20,710 @@ public class StudentsController : ControllerBase
         _context = context;
     }
 
-    public class NextClassInfo
+    private class NextClassInfo
     {
-        public string ma_lop { get; set; }
-        public string ten_mon_hoc_vn { get; set; }
-        public string thu { get; set; }
-        public int tiet_bat_dau { get; set; }
-        public int tiet_ket_thuc { get; set; }
-        public string phong_hoc { get; set; }
-        public DateTime ngay_hoc { get; set; }
+        [Column("ma_lop")]
+        public string MaLop { get; set; } = string.Empty;
+        [Column("ten_mon_hoc_vn")]
+        public string TenMonHocVn { get; set; } = string.Empty;
+        [Column("thu")]
+        public string Thu { get; set; } = string.Empty;
+        [Column("tiet_bat_dau")]
+        public int TietBatDau { get; set; }
+        [Column("tiet_ket_thuc")]
+        public int TietKetThuc { get; set; }
+        [Column("phong_hoc")]
+        public string PhongHoc { get; set; } = string.Empty;
+        [Column("ngay_hoc")]
+        public DateTime NgayHoc { get; set; }
+        [Column("ten_giang_vien")]
+        public string TenGiangVien { get; set; } = string.Empty;
     }
+
     private class CardInfoResult
     {
-        public int mssv { get; set; }
-        public string ho_ten { get; set; } = string.Empty;
-        public int khoa_hoc { get; set; }
-        public string nganh_hoc { get; set; } = string.Empty;
-        public string? anh_the_url { get; set; }
+        [Column("mssv")]
+        public int Mssv { get; set; }
+        [Column("ho_ten")]
+        public string HoTen { get; set; } = string.Empty;
+        [Column("khoa_hoc")]
+        public int KhoaHoc { get; set; }
+        [Column("nganh_hoc")]
+        public string NganhHoc { get; set; } = string.Empty;
+        [Column("anh_the_url")]
+        public string? AnhTheUrl { get; set; }
     }
 
-    private class QuickGpa
+    private class QuickGpaResult
     {
-        public float gpa { get; set; }
-
-        public int so_tin_chi_tich_luy { get; set; } = 0;
+        [Column("gpa")]
+        public float Gpa { get; set; }
+        [Column("so_tin_chi_tich_luy")]
+        public int SoTinChiTichLuy { get; set; } = 0;
     }
+
     private class AcademicResultQueryResult
     {
-        public string? hoc_ky { get; set; }
-        public string? ma_mon_hoc { get; set; }
-        public string? ten_mon_hoc { get; set; }
-        public int? so_tin_chi { get; set; }
-        public int? trong_so_qua_trinh { get; set; }
-        public int? trong_so_giua_ki { get; set; }
-        public int? trong_so_thuc_hanh { get; set; }
-        public int? trong_so_cuoi_ki { get; set; }
-        public decimal? diem_qua_trinh { get; set; }
-        public decimal? diem_giua_ki { get; set; }
-        public decimal? diem_thuc_hanh { get; set; }
-        public decimal? diem_cuoi_ki { get; set; }
-        public decimal? diem_tong_ket { get; set; }
+        [Column("hoc_ky")]
+        public string? HocKy { get; set; }
+        [Column("ma_mon_hoc")]
+        public string? MaMonHoc { get; set; }
+        [Column("ten_mon_hoc")]
+        public string? TenMonHoc { get; set; }
+        [Column("so_tin_chi")]
+        public int? SoTinChi { get; set; }
+        [Column("trong_so_qua_trinh")]
+        public int? TrongSoQuaTrinh { get; set; }
+        [Column("trong_so_giua_ki")]
+        public int? TrongSoGiuaKi { get; set; }
+        [Column("trong_so_thuc_hanh")]
+        public int? TrongSoThucHanh { get; set; }
+        [Column("trong_so_cuoi_ki")]
+        public int? TrongSoCuoiKi { get; set; }
+        [Column("diem_qua_trinh")]
+        public decimal? DiemQuaTrinh { get; set; }
+        [Column("diem_giua_ki")]
+        public decimal? DiemGiuaKi { get; set; }
+        [Column("diem_thuc_hanh")]
+        public decimal? DiemThucHanh { get; set; }
+        [Column("diem_cuoi_ki")]
+        public decimal? DiemCuoiKi { get; set; }
+        [Column("diem_tong_ket")]
+        public decimal? DiemTongKet { get; set; }
     }
 
-    // GET: api/students/nextclass
-    [HttpGet("/nextclass")]
+    private class ScheduleQueryResult
+    {
+        [Column("ma_lop")]
+        public string MaLop { get; set; } = string.Empty;
+        [Column("ten_mon_hoc_vn")]
+        public string TenMonHocVn { get; set; } = string.Empty;
+        [Column("thu")]
+        public string Thu { get; set; } = string.Empty;
+        [Column("tiet_bat_dau")]
+        public int TietBatDau { get; set; }
+        [Column("tiet_ket_thuc")]
+        public int TietKetThuc { get; set; }
+        [Column("phong_hoc")]
+        public string PhongHoc { get; set; } = string.Empty;
+        [Column("ngay_hoc")]
+        public DateTime NgayHoc { get; set; }
+        [Column("ten_giang_vien")]
+        public string TenGiangVien { get; set; } = string.Empty;
+    }
+
+    private class StudentProfileQueryResult
+    {
+        [Column("mssv")]
+        public int Mssv { get; set; }
+        [Column("ho_ten")]
+        public string HoTen { get; set; } = string.Empty;
+        [Column("ngay_sinh")]
+        public DateOnly NgaySinh { get; set; }
+        [Column("nganh_hoc")]
+        public string NganhHoc { get; set; } = string.Empty;
+        [Column("khoa_hoc")]
+        public int KhoaHoc { get; set; }
+        [Column("lop_sinh_hoat")]
+        public string LopSinhHoat { get; set; } = string.Empty;
+
+        [Column("noi_sinh")]
+        public string? NoiSinh { get; set; }
+        [Column("cccd")]
+        public string? Cccd { get; set; }
+        [Column("ngay_cap_cccd")]
+        public DateOnly? NgayCapCccd { get; set; }
+        [Column("noi_cap_cccd")]
+        public string? NoiCapCccd { get; set; }
+        [Column("dan_toc")]
+        public string? DanToc { get; set; }
+        [Column("ton_giao")]
+        public string? TonGiao { get; set; }
+        [Column("so_dien_thoai")]
+        public string? SoDienThoai { get; set; }
+        [Column("dia_chi_thuong_tru")]
+        public string? DiaChiThuongTru { get; set; }
+        [Column("tinh_thanh_pho")]
+        public string? TinhThanhPho { get; set; }
+        [Column("phuong_xa")]
+        public string? PhuongXa { get; set; }
+        [Column("qua_trinh_hoc_tap_cong_tac")]
+        public string? QuaTrinhHocTapCongTac { get; set; }
+        [Column("thanh_tich")]
+        public string? ThanhTich { get; set; }
+        [Column("email_ca_nhan")]
+        public string? EmailCaNhan { get; set; }
+
+        [Column("ma_ngan_hang")]
+        public string? MaNganHang { get; set; }
+        [Column("ten_ngan_hang")]
+        public string? TenNganHang { get; set; }
+        [Column("so_tai_khoan")]
+        public string? SoTaiKhoan { get; set; }
+        [Column("chi_nhanh")]
+        public string? ChiNhanh { get; set; }
+
+        [Column("ho_ten_cha")]
+        public string? HoTenCha { get; set; }
+        [Column("quoc_tich_cha")]
+        public string? QuocTichCha { get; set; }
+        [Column("dan_toc_cha")]
+        public string? DanTocCha { get; set; }
+        [Column("ton_giao_cha")]
+        public string? TonGiaoCha { get; set; }
+        [Column("sdt_cha")]
+        public string? SdtCha { get; set; }
+        [Column("email_cha")]
+        public string? EmailCha { get; set; }
+        [Column("dia_chi_thuong_tru_cha")]
+        public string? DiaChiThuongTruCha { get; set; }
+        [Column("cong_viec_cha")]
+        public string? CongViecCha { get; set; }
+
+        [Column("ho_ten_me")]
+        public string? HoTenMe { get; set; }
+        [Column("quoc_tich_me")]
+        public string? QuocTichMe { get; set; }
+        [Column("dan_toc_me")]
+        public string? DanTocMe { get; set; }
+        [Column("ton_giao_me")]
+        public string? TonGiaoMe { get; set; }
+        [Column("sdt_me")]
+        public string? SdtMe { get; set; }
+        [Column("email_me")]
+        public string? EmailMe { get; set; }
+        [Column("dia_chi_thuong_tru_me")]
+        public string? DiaChiThuongTruMe { get; set; }
+        [Column("cong_viec_me")]
+        public string? CongViecMe { get; set; }
+
+        [Column("ho_ten_ngh")]
+        public string? HoTenNgh { get; set; }
+        [Column("quoc_tich_ngh")]
+        public string? QuocTichNgh { get; set; }
+        [Column("dan_toc_ngh")]
+        public string? DanTocNgh { get; set; }
+        [Column("ton_giao_ngh")]
+        public string? TonGiaoNgh { get; set; }
+        [Column("sdt_ngh")]
+        public string? SdtNgh { get; set; }
+        [Column("email_ngh")]
+        public string? EmailNgh { get; set; }
+        [Column("dia_chi_thuong_tru_ngh")]
+        public string? DiaChiThuongTruNgh { get; set; }
+        [Column("cong_viec_ngh")]
+        public string? CongViecNgh { get; set; }
+
+        [Column("thong_tin_nguoi_can_bao_tin")]
+        public string? ThongTinNguoiCanBaoTin { get; set; }
+        [Column("so_dien_thoai_bao_tin")]
+        public string? SoDienThoaiBaoTin { get; set; }
+
+        [Column("anh_the_url")]
+        public string? AnhTheUrl { get; set; }
+    }
+
+    private class RegisteredCourseQueryResult
+{
+    [Column("ma_lop")]
+    public string MaLop { get; set; } = string.Empty;
+
+    [Column("ma_mon_hoc")]
+    public string MaMonHoc { get; set; } = string.Empty;
+
+    [Column("ten_mon_hoc")]
+    public string TenMonHoc { get; set; } = string.Empty;
+
+    [Column("so_tin_chi")]
+    public int SoTinChi { get; set; }
+
+    [Column("ma_giang_vien")]
+    public string MaGiangVien { get; set; } = string.Empty;
+}
+
+public class PrerequisiteDto
+{
+    [Column("ma_mon_hoc_dieu_kien")]
+    public string MaMonHocDieuKien { get; set; } = string.Empty;
+
+    [Column("ten_mon_hoc")]
+    public string TenMonHoc { get; set; } = string.Empty;
+}
+
+public class ConductTotal
+{
+
+    [Column("mssv")]
+    public int Mssv { get; set; }
+    [Column("tong_diem_ren_luyen")]
+    public decimal TongDiemRenLuyen { get; set; }
+}
+
+public class ConductDetail
+{
+    [Column("ma_hoat_dong")]
+    public int MaHoatDong { get; set; }
+
+    [Column("ten_hoat_dong")]
+    public string TenHoatDong { get; set; } = string.Empty;
+
+    [Column("ma_tieu_chi")]
+    public string MaTieuChi { get; set; } = string.Empty;
+
+    [Column("ten_tieu_chi")]
+    public string TenTieuChi { get; set; } = string.Empty;
+
+    [Column("he_so_tham_gia")]
+    public int HeSoThamGia { get; set; }
+
+    [Column("diem")]
+    public int Diem { get; set; }
+
+    [Column("tong_diem")]
+    public int TongDiem { get; set; }
+
+    [Column("ghi_chu")]
+    public string? GhiChu { get; set; }
+}
+
+public class PersonalSchedule
+{
+    [Column("ngay")]
+    public DateTime Ngay { get; set; }
+    [Column("noi_dung")]
+    public string NoiDung { get; set; } = string.Empty;
+    [Column("ghi_chu")]
+    public string? GhiChu { get; set; }
+}
+
+
+    //--- API Endpoints ---
+
+    [HttpGet("nextclass")]
     public async Task<ActionResult<NextClassDto>> GetNextClass()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (loggedInMssv == null)
+        if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+
+        var nextClassResult = await _context.Database.SqlQuery<NextClassInfo>(
+            $"SELECT * FROM func_get_next_class({mssvInt})")
+            .FirstOrDefaultAsync();
+
+        if (nextClassResult == null) return NoContent();
+
+        var dto = new NextClassDto
         {
-            return Forbid();
-        }
-
-        if (!int.TryParse(loggedInMssv, out int mssvInt))
-        {
-            return Forbid();
-        }
-
-        var NextClassResult = await
-        _context.Database.SqlQuery<NextClassInfo>
-        ($"SELECT * FROM func_get_next_class({mssvInt})")
-        .FirstOrDefaultAsync();
-
-        if (NextClassResult == null) return NoContent();
-
-        var NextClass = new NextClassDto
-        {
-            MaLop = NextClassResult.ma_lop,
-            TenLop = NextClassResult.ten_mon_hoc_vn,
-            Thu = NextClassResult.thu,
-            TietBatDau = NextClassResult.tiet_bat_dau,
-            TietKetThuc = NextClassResult.tiet_ket_thuc,
-            PhongHoc = NextClassResult.phong_hoc,
-            NgayHoc = NextClassResult.ngay_hoc
+            MaLop = nextClassResult.MaLop,
+            TenLop = nextClassResult.TenMonHocVn,
+            Thu = nextClassResult.Thu,
+            TietBatDau = nextClassResult.TietBatDau,
+            TietKetThuc = nextClassResult.TietKetThuc,
+            PhongHoc = nextClassResult.PhongHoc,
+            NgayHoc = nextClassResult.NgayHoc,
+            TenGiangVien = nextClassResult.TenGiangVien
         };
 
-        return Ok(NextClass);
+        return Ok(dto);
     }
 
-    // GET: api/students/card
-    [HttpGet("/card")]
+    [HttpGet("card")]
     public async Task<ActionResult<StudentCardDto>> GetStudentCard()
     {
-        // Bước 1: Xác định người dùng đang thực hiện yêu cầu từ Token
-        // Lấy mssv của người dùng đã đăng nhập từ claim trong JWT
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (loggedInMssv == null)
-        {
-            return Forbid();
-        }
+        if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
 
-        // Bước 2: Truy vấn thông tin sinh viên từ database ===
-        if (!int.TryParse(loggedInMssv, out int mssvInt))
-        {
-            return Forbid();
-        }
-
-        var student = await
-            _context.Database.SqlQuery<CardInfoResult>(
+        var student = await _context.Database.SqlQuery<CardInfoResult>(
             $"SELECT * FROM func_get_student_card_info({mssvInt})")
             .FirstOrDefaultAsync();
 
-        if (student == null)
-        {
-            return NotFound(); // Không tìm thấy sinh viên với mssv này
-        }
+        if (student == null) return NotFound();
 
-        // === Bước 3: Xây dựng đường dẫn URL đầy đủ cho ảnh thẻ ===
-        string? avatarFullUrl = null;
-        if (!string.IsNullOrEmpty(student.anh_the_url))
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        var dto = new StudentCardDto
         {
-            // Ghép địa chỉ server + request path + đường dẫn tương đối trong DB
-            // Ví dụ: https://localhost:5093 + /files + /Students/Avatars/23520560.jpg
-            var baseUrl = $"{Request.Scheme}://{Request.Host}";
-            avatarFullUrl = $"{baseUrl}/files/{student.anh_the_url}";
-
-        }
-
-        // === Bước 4: Ánh xạ dữ liệu từ entity của database sang DTO để trả về ===
-        var studentCard = new StudentCardDto
-        {
-            Mssv = student.mssv,
-            HoTen = student.ho_ten,
-            KhoaHoc = student.khoa_hoc,
-            NganhHoc = student.nganh_hoc,
-            AvatarFullUrl = avatarFullUrl
+            Mssv = student.Mssv,
+            HoTen = student.HoTen,
+            KhoaHoc = student.KhoaHoc,
+            NganhHoc = student.NganhHoc,
+            AvatarFullUrl = !string.IsNullOrEmpty(student.AnhTheUrl) 
+                ? $"{baseUrl}/files/{student.AnhTheUrl}" 
+                : null
         };
 
-        return Ok(studentCard);
+        return Ok(dto);
     }
 
-    /// <summary>
-    /// Retrieves the quick GPA and accumulated credits for the currently authenticated student.
-    /// </summary>
-    [HttpGet("/quickgpa")]
+    [HttpGet("quickgpa")]
     public async Task<ActionResult<QuickGpaDto>> GetQuickGpa()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
 
-        if (loggedInMssv == null) return Forbid();
-
-        if (!int.TryParse(loggedInMssv, out int mssvInt))
-        {
-            return Forbid();
-        }
-
-        var result = await
-            _context.Database.SqlQuery<QuickGpa>(
+        var result = await _context.Database.SqlQuery<QuickGpaResult>(
             $"SELECT * FROM func_calculate_gpa({mssvInt})")
             .FirstOrDefaultAsync();
 
-        if (result == null)
-        {
-            return NotFound(); // Không tìm thấy sinh viên với mssv này
-        }
+        if (result == null) return NotFound();
 
-        var gpaAndCredits = new QuickGpaDto
+        return Ok(new QuickGpaDto
         {
-            Gpa = result.gpa,
-            SoTinChiTichLuy = result.so_tin_chi_tich_luy
-        };
-
-        return Ok(gpaAndCredits);
+            Gpa = result.Gpa,
+            SoTinChiTichLuy = result.SoTinChiTichLuy
+        });
     }
 
-    // GET: api/students/academicresults
-    [HttpGet("/academicresults")]
+    [HttpGet("academicresults")]
     public async Task<ActionResult<IEnumerable<AcademicResultDTO>>> GetAcademicResults()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (loggedInMssv == null) return Forbid();
-
         if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
 
-        // Gọi hàm database để lấy chi tiết kết quả học tập
-        var queryResults = await _context.Database.SqlQuery<AcademicResultQueryResult>
-            ($"SELECT * FROM chi_tiet_ket_qua_hoc_tap({mssvInt})")
+        var queryResults = await _context.Database.SqlQuery<AcademicResultQueryResult>(
+            $"SELECT * FROM chi_tiet_ket_qua_hoc_tap({mssvInt})")
             .ToListAsync();
 
-        if (queryResults == null || queryResults.Count == 0)
-            return NotFound("No academic results found");
+        if (!queryResults.Any()) return NotFound();
 
-        // Chuyển đổi từ query result sang DTO
-        var academicResults = queryResults.Select(r => new AcademicResultDTO
+        var dtos = queryResults.Select(r => new AcademicResultDTO
         {
-            HocKy = r.hoc_ky ?? string.Empty,
-            MaMonHoc = r.ma_mon_hoc ?? string.Empty,
-            TenMonHoc = r.ten_mon_hoc ?? string.Empty,
-            SoTinChi = r.so_tin_chi ?? 0,
-            TrongSoQuaTrinh = r.trong_so_qua_trinh ?? 0,
-            TrongSoGiuaKi = r.trong_so_giua_ki ?? 0,
-            TrongSoThucHanh = r.trong_so_thuc_hanh ?? 0,
-            TrongSoCuoiKi = r.trong_so_cuoi_ki ?? 0,
-            DiemQuaTrinh = r.diem_qua_trinh,
-            DiemGiuaKi = r.diem_giua_ki,
-            DiemThucHanh = r.diem_thuc_hanh,
-            DiemCuoiKi = r.diem_cuoi_ki,
-            DiemTongKet = r.diem_tong_ket
+            HocKy = r.HocKy ?? string.Empty,
+            MaMonHoc = r.MaMonHoc ?? string.Empty,
+            TenMonHoc = r.TenMonHoc ?? string.Empty,
+            SoTinChi = r.SoTinChi ?? 0,
+            TrongSoQuaTrinh = r.TrongSoQuaTrinh ?? 0,
+            TrongSoGiuaKi = r.TrongSoGiuaKi ?? 0,
+            TrongSoThucHanh = r.TrongSoThucHanh ?? 0,
+            TrongSoCuoiKi = r.TrongSoCuoiKi ?? 0,
+            DiemQuaTrinh = r.DiemQuaTrinh,
+            DiemGiuaKi = r.DiemGiuaKi,
+            DiemThucHanh = r.DiemThucHanh,
+            DiemCuoiKi = r.DiemCuoiKi,
+            DiemTongKet = r.DiemTongKet
         }).ToList();
 
-        return Ok(academicResults);
+        return Ok(dtos);
     }
+
+    [HttpGet("schedule/{hocKy}")]
+    public async Task<ActionResult<IEnumerable<FullScheduleDto>>> GetFullSchedule(string hocKy)
+    {
+        var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+
+        var queryResults = await _context.Database.SqlQuery<ScheduleQueryResult>(
+            $"SELECT * FROM public.get_full_schedule({mssvInt}, {hocKy})")
+            .ToListAsync();
+
+        if (!queryResults.Any()) return NoContent();
+
+        var dtos = queryResults.Select(r => new FullScheduleDto
+        {
+            MaLop = r.MaLop,
+            TenLop = r.TenMonHocVn,
+            Thu = r.Thu,
+            TietBatDau = r.TietBatDau,
+            TietKetThuc = r.TietKetThuc,
+            PhongHoc = r.PhongHoc,
+            NgayHoc = r.NgayHoc,
+            TenGiangVien = r.TenGiangVien
+        }).ToList();
+
+        return Ok(dtos);
+    }
+
+    [HttpGet("profile")]
+    public async Task<ActionResult<StudentProfileDto>> GetStudentProfile()
+    {
+        var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+
+        var result = await _context.Database.SqlQuery<StudentProfileQueryResult>(
+            $"SELECT * FROM func_get_student_profile({mssvInt})")
+            .FirstOrDefaultAsync();
+
+        if (result == null) return NotFound();
+
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        var dto = new StudentProfileDto
+        {
+            Mssv = result.Mssv,
+            HoTen = result.HoTen,
+            NgaySinh = result.NgaySinh,
+            NganhHoc = result.NganhHoc,
+            KhoaHoc = result.KhoaHoc,
+            LopSinhHoat = result.LopSinhHoat,
+            NoiSinh = result.NoiSinh,
+            Cccd = result.Cccd,
+            NgayCapCccd = result.NgayCapCccd,
+            NoiCapCccd = result.NoiCapCccd,
+            DanToc = result.DanToc,
+            TonGiao = result.TonGiao,
+            SoDienThoai = result.SoDienThoai,
+            DiaChiThuongTru = result.DiaChiThuongTru,
+            TinhThanhPho = result.TinhThanhPho,
+            PhuongXa = result.PhuongXa,
+            QuaTrinhHocTapCongTac = result.QuaTrinhHocTapCongTac,
+            ThanhTich = result.ThanhTich,
+            EmailCaNhan = result.EmailCaNhan,
+            MaNganHang = result.MaNganHang,
+            TenNganHang = result.TenNganHang,
+            SoTaiKhoan = result.SoTaiKhoan,
+            ChiNhanh = result.ChiNhanh,
+            Cha = new ThongTinPhuHuynh
+            {
+                HoTen = result.HoTenCha,
+                QuocTich = result.QuocTichCha,
+                DanToc = result.DanTocCha,
+                TonGiao = result.TonGiaoCha,
+                SoDienThoai = result.SdtCha,
+                Email = result.EmailCha,
+                DiaChiThuongTru = result.DiaChiThuongTruCha,
+                CongViec = result.CongViecCha
+            },
+            Me = new ThongTinPhuHuynh
+            {
+                HoTen = result.HoTenMe,
+                QuocTich = result.QuocTichMe,
+                DanToc = result.DanTocMe,
+                TonGiao = result.TonGiaoMe,
+                SoDienThoai = result.SdtMe,
+                Email = result.EmailMe,
+                DiaChiThuongTru = result.DiaChiThuongTruMe,
+                CongViec = result.CongViecMe
+            },
+            NguoiGiamHo = new ThongTinPhuHuynh
+            {
+                HoTen = result.HoTenNgh,
+                QuocTich = result.QuocTichNgh,
+                DanToc = result.DanTocNgh,
+                TonGiao = result.TonGiaoNgh,
+                SoDienThoai = result.SdtNgh,
+                Email = result.EmailNgh,
+                DiaChiThuongTru = result.DiaChiThuongTruNgh,
+                CongViec = result.CongViecNgh
+            },
+            ThongTinNguoiCanBaoTin = result.ThongTinNguoiCanBaoTin,
+            SoDienThoaiBaoTin = result.SoDienThoaiBaoTin,
+            AvatarFullUrl = !string.IsNullOrEmpty(result.AnhTheUrl) 
+                ? $"{baseUrl}/files/{result.AnhTheUrl}" 
+                : null
+        };
+
+        return Ok(dto);
+    }
+// PUT: /api/students/avatar
+    [HttpPut("avatar")]
+    [RequestSizeLimit(10 * 1024 * 1024)]
+    [Consumes("multipart/form-data")]
+    public async Task<ActionResult<AvatarUploadDto>> UpdateStudentAvatar([FromForm] UpdateAvatarDto request)
+    {
+        var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+
+        var file = request.AvatarFile;
+        if (file == null || file.Length == 0)
+            return BadRequest("No file uploaded.");
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+        var extension = Path.GetExtension(file.FileName).ToLower();
+        if (!allowedExtensions.Contains(extension))
+            return BadRequest("Invalid file type. Only jpg, jpeg, png allowed.");
+
+        var student = await _context.Students.FirstOrDefaultAsync(s => s.Mssv == mssvInt);
+        if (student == null) return NotFound();
+
+        if (!string.IsNullOrEmpty(student.AnhTheUrl))
+        {
+            var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "files", student.AnhTheUrl);
+            if (System.IO.File.Exists(oldFilePath))
+                System.IO.File.Delete(oldFilePath);
+        }
+
+        var newFileName = $"avatar_{mssvInt}_{DateTime.Now.Ticks}{extension}";
+        var savePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "files", newFileName);
+
+        Directory.CreateDirectory(Path.GetDirectoryName(savePath)!);
+
+        await using (var stream = new FileStream(savePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        student.AnhTheUrl = newFileName;
+        await _context.SaveChangesAsync();
+
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        var dto = new AvatarUploadDto
+        {
+            AvatarFullUrl = $"{baseUrl}/files/{newFileName}"
+        };
+
+        return Ok(dto);
+    }
+[HttpGet("exams")]
+public async Task<ActionResult<IEnumerable<StudentExamDto>>> GetExamSchedule(
+    [FromQuery] string hocKy)
+{
+    // Lấy MSSV từ JWT
+    var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!int.TryParse(loggedInMssv, out int mssvInt))
+        return Forbid();
+
+    if (string.IsNullOrWhiteSpace(hocKy))
+        return BadRequest("Vui lòng truyền `hocKy` dạng '2025_2026_1'");
+
+    // Gọi function Postgres
+    var exams = await _context.Set<StudentExamDto>()
+        .FromSqlInterpolated(
+            $@"SELECT * FROM func_get_exam_schedule({mssvInt}, {hocKy})"
+        )
+        .ToListAsync();
+
+    if (!exams.Any())
+        return NoContent();
+
+    return Ok(exams);
+}
+
+
+[HttpGet("registered-courses")]
+public async Task<ActionResult<IEnumerable<RegisteredCourseDto>>> GetRegisteredCourses()
+{
+    var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+
+    var coursesQuery = await _context.Database
+        .SqlQuery<RegisteredCourseQueryResult>($"SELECT * FROM func_get_student_registered_courses({mssvInt})")
+        .ToListAsync();
+
+    if (!coursesQuery.Any()) return NoContent();
+
+    // Map sang DTO public nếu muốn tách lớp private/public
+    var courses = coursesQuery.Select(c => new RegisteredCourseDto
+    {
+        MaLop = c.MaLop,
+        MaMonHoc = c.MaMonHoc,
+        TenMonHoc = c.TenMonHoc,
+        SoTinChi = c.SoTinChi,
+        MaGiangVien = c.MaGiangVien
+    }).ToList();
+
+    return Ok(courses);
+}
+
+[HttpGet("prerequisites")]
+public async Task<ActionResult<IEnumerable<PrerequisiteDto>>> GetPrerequisites([FromQuery] string maMon)
+{
+    var prerequisites = await _context.Database
+        .SqlQuery<PrerequisiteDto>($"SELECT * FROM func_get_prerequisites({maMon})")
+        .ToListAsync();
+
+    if (!prerequisites.Any()) return NoContent();
+
+    return Ok(prerequisites);
+}
+
+// GET: /api/Students/conduct/total
+[HttpGet("conduct/total")]
+public async Task<ActionResult<ConductTotal>> GetTotalConduct()
+{
+    var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+
+    var totalResult = await _context.Database
+        .SqlQuery<ConductTotal>($"SELECT * FROM func_total_conduct({mssvInt})")
+        .FirstOrDefaultAsync();
+
+    if (totalResult == null)
+    {
+        totalResult = new ConductTotal
+        {
+            Mssv = mssvInt,
+            TongDiemRenLuyen = 0
+        };
+    }
+
+    return Ok(totalResult);
+}
+
+
+
+// GET: /api/Students/conduct/details
+[HttpGet("conduct/details")]
+public async Task<ActionResult<IEnumerable<ConductDetail>>> GetConductDetails()
+{
+    var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+
+    var conductList = await _context.Database
+    .SqlQuery<ConductDetail>($"SELECT * FROM func_conduct_list({mssvInt})")
+    .ToListAsync();
+
+
+    if (!conductList.Any()) return NoContent();
+
+    return Ok(conductList);
+}
+
+[HttpGet("personal-schedule")]
+public async Task<ActionResult<IEnumerable<PersonalSchedule>>> GetPersonalSchedule()
+{
+    var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+
+    var result = new List<PersonalSchedule>();
+
+    using (var conn = _context.Database.GetDbConnection())
+    {
+        await conn.OpenAsync();
+        using (var cmd = conn.CreateCommand())
+        {
+            cmd.CommandText = "SELECT * FROM func_get_personal_schedule(@mssv)";
+            var param = cmd.CreateParameter();
+            param.ParameterName = "@mssv";
+            param.Value = mssvInt;
+            cmd.Parameters.Add(param);
+
+            using (var reader = await cmd.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    result.Add(new PersonalSchedule
+                    {
+                        Ngay = reader.GetDateTime(reader.GetOrdinal("ngay")),
+                        NoiDung = reader.GetString(reader.GetOrdinal("noi_dung")),
+                        GhiChu = reader.IsDBNull(reader.GetOrdinal("ghi_chu")) 
+                            ? null 
+                            : reader.GetString(reader.GetOrdinal("ghi_chu"))
+                    });
+                }
+            }
+        }
+    }
+
+    if (!result.Any()) return NoContent();
+    return Ok(result);
+}
+
+
+
+[HttpPut("personal-schedule")]
+public async Task<IActionResult> UpdatePersonalSchedule([FromBody] PersonalSchedule model)
+{
+    var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+
+    await _context.Database.ExecuteSqlInterpolatedAsync($@"
+        INSERT INTO lich_ca_nhan (mssv, ngay, noi_dung, ghi_chu)
+        VALUES ({mssvInt}, {model.Ngay}, {model.NoiDung}, {model.GhiChu})
+        ON CONFLICT (mssv, ngay)
+        DO UPDATE SET 
+            noi_dung = EXCLUDED.noi_dung,
+            ghi_chu = EXCLUDED.ghi_chu;
+    ");
+
+    return Ok(new { message = "Cập nhật lịch cá nhân thành công" });
+}
+
+
 }

@@ -1,12 +1,11 @@
---language plpgsql;-- This script creates the eUIT database and its initial tables for managing student information, courses, and
-DROP DATABASE IF EXISTS "eUIT";
+language plpgsql;-- This script creates the eUIT database and its initial tables for managing student information, courses, and
+--DROP DATABASE IF EXISTS "eUIT";
 
 
 
 CREATE DATABASE "eUIT"
     WITH
     OWNER = postgres
-	TEMPLATE = template0
     ENCODING = 'UTF8'
     LC_COLLATE = 'vi-VN'
     LC_CTYPE = 'vi-VN'
@@ -14,8 +13,6 @@ CREATE DATABASE "eUIT"
     TABLESPACE = pg_default
     CONNECTION LIMIT = -1
     IS_TEMPLATE = False;
-
-\c eUIT
 
 --Tao bang sinh vien
 CREATE TABLE sinh_vien
@@ -27,6 +24,7 @@ CREATE TABLE sinh_vien
 	nganh_hoc VARCHAR(100) NOT NULL,
 	khoa_hoc INT NOT NULL,
 	lop_sinh_hoat CHAR(10) NOT NULL,
+
 	--Thong tin ca nhan sinh vien
 	noi_sinh VARCHAR(200) NOT NULL,
 	cccd CHAR(12) NOT NULL,
@@ -41,11 +39,13 @@ CREATE TABLE sinh_vien
 	qua_trinh_hoc_tap_cong_tac VARCHAR(500) NOT NULL,
 	thanh_tich VARCHAR(500) NOT NULL,
 	email_ca_nhan VARCHAR(50) NOT NULL,
+
 	--Thong tin ngan hang
 	ma_ngan_hang char(4),
 	ten_ngan_hang varchar(20),
 	so_tai_khoan VARCHAR(20),
 	chi_nhanh varchar(50),
+
 	--Thong tin ve phu huynh sinh vien - Cha
 	ho_ten_cha varchar(50),
 	quoc_tich_cha varchar(20),
@@ -55,6 +55,7 @@ CREATE TABLE sinh_vien
 	email_cha varchar(50), 
 	dia_chi_thuong_tru_cha varchar(200),
 	cong_viec_cha varchar(20),
+	
 	--Thong tin ve phu huynh sinh vien - Me
 	ho_ten_me varchar(50),
 	quoc_tich_me varchar(20),
@@ -64,6 +65,7 @@ CREATE TABLE sinh_vien
 	email_me varchar(50), 
 	dia_chi_thuong_tru_me varchar(200),
 	cong_viec_me varchar(20),
+
 	--Thong tin ve phu huynh sinh vien - Nguoi giam ho
 	ho_ten_ngh varchar(50),
 	quoc_tich_ngh varchar(20),
@@ -73,12 +75,13 @@ CREATE TABLE sinh_vien
 	email_ngh varchar(50), 
 	dia_chi_thuong_tru_ngh varchar(200),
 	cong_viec_ngh varchar(20),
+
 	--Khi can bao tin cho ai? o dau
 	thong_tin_nguoi_can_bao_tin varchar(200) NOT NULL,
 	so_dien_thoai_bao_tin char(10) NOT NULL,
 
 	anh_the_url VARCHAR(255)
-);
+)
 
 CREATE TABLE giang_vien
 (
@@ -99,7 +102,8 @@ CREATE TABLE giang_vien
 	phuong_xa text NOT NULL
 
 	-- Cac thong tin khac ve giang vien co the them vao sau
-);
+)
+
 
 CREATE TABLE mon_hoc
 (
@@ -111,7 +115,7 @@ CREATE TABLE mon_hoc
 	loai_mon_hoc char(4),
 	so_tc_ly_thuyet int,
 	so_tc_thuc_hanh int
-);
+)
  
 
 
@@ -124,7 +128,7 @@ CREATE TABLE dieu_kien_mon_hoc
 	PRIMARY KEY (ma_mon_hoc, ma_mon_hoc_dieu_kien),
 	FOREIGN KEY (ma_mon_hoc) REFERENCES mon_hoc(ma_mon_hoc),
 	FOREIGN KEY (ma_mon_hoc_dieu_kien) REFERENCES mon_hoc(ma_mon_hoc)
-);
+)
 
 
 CREATE TABLE thoi_khoa_bieu 
@@ -147,7 +151,7 @@ CREATE TABLE thoi_khoa_bieu
 	PRIMARY KEY (ma_lop, ma_giang_vien),
 	FOREIGN KEY (ma_mon_hoc) REFERENCES mon_hoc(ma_mon_hoc),
 	FOREIGN KEY (ma_giang_vien) REFERENCES giang_vien(ma_giang_vien)
-);
+)
 
 
 CREATE TABLE bang_diem (
@@ -187,7 +191,7 @@ CREATE TABLE hoc_phi
 	so_tien_con_lai float , --So tien con lai can dong/con thua
 	PRIMARY KEY (mssv, hoc_ky),
 	FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv)
-);
+)
 -- Update so tien da dong
 UPDATE hoc_phi
 SET da_dong = 17000000.00
@@ -210,7 +214,7 @@ CREATE TABLE dang_ky_gui_xe
 	ngay_het_han DATE NOT NULL, --Ngay het han dang ky
 	PRIMARY KEY (mssv, ma_bien_so),
 	FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv)	
-);
+)
 
 CREATE TABLE xac_nhan_chung_chi
 (
@@ -223,7 +227,7 @@ CREATE TABLE xac_nhan_chung_chi
 	ghi_chu VARCHAR(100), -- Ghi chu ve chung chi
 	PRIMARY KEY (mssv, ma_chung_chi),
 	FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv)
-);
+)
 
 CREATE TABLE thong_bao
 (
@@ -286,7 +290,7 @@ CREATE TABLE coi_thi
 	FOREIGN KEY (giam_thi_1) REFERENCES giang_vien(ma_giang_vien) ON DELETE SET NULL ON UPDATE CASCADE,
 	FOREIGN KEY (giam_thi_2) REFERENCES giang_vien(ma_giang_vien) ON DELETE SET NULL
 
-);
+)
 
 --Nhom bang diem ren luyen
 CREATE TABLE tieu_chi
@@ -298,7 +302,7 @@ CREATE TABLE tieu_chi
 
 	FOREIGN KEY (tieu_chi_cha) REFERENCES tieu_chi(tieu_chi)
 
-);
+)
 
 CREATE TABLE hoat_dong_ren_luyen
 (
@@ -328,7 +332,6 @@ CREATE TABLE chi_tiet_hoat_dong_ren_luyen
 );
 
 
-ALTER TABLE sinh_vien ADD COLUMN anh_the_url VARCHAR(225);
 
 
 

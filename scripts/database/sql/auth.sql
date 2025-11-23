@@ -5,25 +5,15 @@
 -- Lưu ý bảo mật: sử dụng pgcrypto để hash mật khẩu (bcrypt) và lưu hash của token (SHA-256).
 
 -- Kích hoạt extension cần thiết. Yêu cầu quyền SUPERUSER để cài đặt extension lần đầu.
-\c eUIT
-
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
 -- Kiểu role dùng trong các hàm (student = sinh viên, lecturer = giảng viên, admin = quản trị)
 DO $$
 BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM pg_type WHERE typname = 'auth_user_role'
-    ) THEN
-        EXECUTE 'CREATE TYPE auth_user_role AS ENUM (''student'', ''lecturer'', ''admin'')';
+    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'auth_user_role') THEN
+        CREATE TYPE auth_user_role AS ENUM ('student','lecturer','admin');
     END IF;
-END;
-$$ LANGUAGE plpgsql;
-
-
-
-
-
+END$$;
 
 -- Bảng tài khoản cho từng loại người dùng. Giữ tách biệt theo hệ thống hiện có nhưng đồng nhất các cột quản lý bảo mật.
 -- Lưu mật khẩu dưới dạng hash (bcrypt) trong cột password_hash.
@@ -143,6 +133,12 @@ BEGIN
     VALUES (p_ma_giang_vien, auth_hash_password(p_password));
 END;
 $$;
+SELECT create_lecturer_account('80068', 'Password123');
+SELECT auth_authenticate(
+    p_role     := 'lecturer',
+    p_user_id  := '80068',
+    p_password := 'Password123'
+);
 
 CREATE OR REPLACE FUNCTION create_admin_account(p_tai_khoan text, p_password text)
 RETURNS void
@@ -272,11 +268,11 @@ DECLARE
     v_hash text := encode(digest(p_token_plain, 'sha256'), 'hex');
 BEGIN
     RETURN QUERY
-    SELECT at.id, at.user_role, at.user_id
-    FROM auth_refresh_tokens at
-    WHERE at.token_hash = v_hash
-      AND at.revoked = false
-      AND at.expires_at > now();
+    SELECT id, user_role, user_id
+    FROM auth_refresh_tokens
+    WHERE token_hash = v_hash
+      AND revoked = false
+      AND expires_at > now();
 END;
 $$;
 
@@ -384,35 +380,14 @@ $$;
 
 
 -- =========================
+-- Gợi ý và chú ý vận hành (comment bằng tiếng Việt):
 /*
  - Lưu ý: Các hàm trên dùng extension pgcrypto; cần cài trên môi trường production.
  - Token (refresh/password reset) được tạo ở ứng dụng (client/server) bằng random secure bytes (thường gen_random_bytes) và plaintext được gửi đến hàm để lưu hash. Ứng dụng chịu trách nhiệm gửi token cho người dùng (email/SMS) và KHÔNG lưu plaintext lâu dài.
  - Không lưu mật khẩu plaintext ở bất kỳ đâu.
+ - Có thể cân nhắc đặt SECURITY DEFINER cho một số hàm nếu muốn chúng chạy với quyền hạn định sẵn, nhưng cần review kỹ về bảo mật.
  - Các TTL (expiry) và policy (số lần sai, thời gian khoá) có thể điều chỉnh theo chính sách an ninh của tổ chức.
+ - Ở tầng ứng dụng (API), khi trả về thông tin lỗi về xác thực, tránh đưa chi tiết: trả về chung chung "Tên đăng nhập hoặc mật khẩu không chính xác" để không giúp kẻ tấn công biết tài khoản tồn tại.
+ - Nên thêm cơ chế logging (audit) bên ngoài DB cho các sự kiện đăng nhập/đổi mật khẩu nhạy cảm.
 */
-
-
-
--- Thêm cột vào bảng tài khoản sinh viên
-ALTER TABLE tai_khoan_sinh_vien
-ADD COLUMN IF NOT EXISTS refresh_token_hash TEXT,
-ADD COLUMN IF NOT EXISTS refresh_token_expiry TIMESTAMPTZ;
-
--- Thêm cột vào bảng tài khoản giảng viên
-ALTER TABLE tai_khoan_giang_vien
-ADD COLUMN IF NOT EXISTS refresh_token_hash TEXT,
-ADD COLUMN IF NOT EXISTS refresh_token_expiry TIMESTAMPTZ;
-
--- Thêm cột vào bảng tài khoản quản trị
-ALTER TABLE tai_khoan_quan_tri
-ADD COLUMN IF NOT EXISTS refresh_token_hash TEXT,
-ADD COLUMN IF NOT EXISTS refresh_token_expiry TIMESTAMPTZ;
-
-
-SELECT create_lecturer_account('80068', 'Password123');
-SELECT auth_authenticate(
-    p_role     := 'lecturer',
-    p_user_id  := '80068',
-    p_password := 'Password123'
-);
 

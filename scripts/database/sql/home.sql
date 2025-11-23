@@ -7,9 +7,11 @@
 --   p_mssv INT: Mã số sinh viên cần tra cứu.
 -- Trả về: Một hàng chứa thông tin lớp học tiếp theo (hoặc rỗng nếu không có).
 -- ---------------------------------------------------------------------------------
+LANGUAGE plpgsql;
 
+drop Function func_get_next_class(p_mssv int)
 
-CREATE OR REPLACE  FUNCTION func_get_next_class(
+CREATE OR REPLACE FUNCTION func_get_next_class(
     p_mssv INT
 )
 RETURNS TABLE (
@@ -19,7 +21,8 @@ RETURNS TABLE (
     tiet_bat_dau INT,
     tiet_ket_thuc INT,
     phong_hoc VARCHAR(10),
-    ngay_hoc DATE
+    ngay_hoc DATE,
+    ten_giang_vien VARCHAR(100)
 )
 LANGUAGE sql
 AS $$
@@ -39,7 +42,9 @@ Schedules AS (
         tkb.ngay_ket_thuc,
         tkb.cach_tuan,
         tkb.ma_mon_hoc,
+        tkb.ma_giang_vien,
         mh.ten_mon_hoc_vn,
+        gv.ho_ten,
         CASE 
             WHEN tkb.thu = '2' THEN 1
             WHEN tkb.thu = '3' THEN 2
@@ -53,6 +58,7 @@ Schedules AS (
     FROM Classes AS c
     JOIN thoi_khoa_bieu AS tkb ON c.ma_lop = tkb.ma_lop
     JOIN mon_hoc AS mh ON tkb.ma_mon_hoc = mh.ma_mon_hoc
+    JOIN giang_vien AS gv ON tkb.ma_giang_vien = gv.ma_giang_vien
     WHERE tkb.hinh_thuc_giang_day != 'HT2'
       AND tkb.ngay_ket_thuc >= CURRENT_DATE
 ),
@@ -64,7 +70,8 @@ PossibleDates AS (
         s.tiet_ket_thuc,
         s.phong_hoc,
         gs.date AS class_date,
-        s.ten_mon_hoc_vn
+        s.ten_mon_hoc_vn,
+        s.ho_ten
     FROM Schedules AS s
     JOIN LATERAL (
         SELECT d::date AS date
@@ -84,10 +91,10 @@ SELECT
     tiet_bat_dau,
     tiet_ket_thuc,
     phong_hoc,
-    class_date AS ngay_hoc
+    class_date AS ngay_hoc,
+    ho_ten
 FROM NextClass;
 $$;
-
 
 SELECT * from func_get_next_class(23520541)
 
