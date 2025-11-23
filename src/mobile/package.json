@@ -19,14 +19,9 @@
     "expo-linear-gradient": "~15.0.7",
     "expo-status-bar": "~3.0.8",
     "lucide-react-native": "^0.546.0",
-<<<<<<< HEAD
-    "react": "19.1.0",
-    "react-native": "0.81.4",
-=======
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-native": "^0.82.1",
->>>>>>> backup-main
     "react-native-dotenv": "^3.4.11",
     "react-native-gesture-handler": "~2.20.2",
     "react-native-reanimated": "~3.16.1",
