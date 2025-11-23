@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
+<<<<<<< HEAD
 import { View, Text, StyleSheet } from "react-native"; // Thêm StyleSheet
+=======
+import { View, Text, StyleSheet } from "react-native";
+>>>>>>> backup-main
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
@@ -9,8 +13,18 @@ import { Feather } from "@expo/vector-icons";
 import LoginScreen from "./features/auth/screens/LoginScreen";
 import HomeScreen from "./features/auth/screens/HomeScreen";
 import { isAuthenticated } from "./features/auth/api/authAPI";
+<<<<<<< HEAD
 import LookupStack from "./features/students/screens/LookupStack";
 
+=======
+
+// Import Stack Navigator cho phần Tra Cứu (Lookup)
+import LookupStack from "./features/students/screens/LookupStack";
+
+// IMPORT MÀN HÌNH LỊCH HỌC HOÀN CHỈNH
+import ScheduleScreen from "./features/students/screens/ScheduleScreen";
+
+>>>>>>> backup-main
 // Các màn hình giả (placeholder)
 function ServicesScreen() {
   return (
@@ -19,6 +33,7 @@ function ServicesScreen() {
     </View>
   );
 }
+<<<<<<< HEAD
 function ScheduleScreen() {
   return (
     <View style={styles.center}>
@@ -27,6 +42,8 @@ function ScheduleScreen() {
   );
 }
 
+=======
+>>>>>>> backup-main
 
 function SettingsScreen() {
   return (
@@ -94,7 +111,11 @@ function MainApp({ setIsLoggedIn }) {
 
       <Tab.Screen
         name="Schedule"
+<<<<<<< HEAD
         component={ScheduleScreen}
+=======
+        component={ScheduleScreen} // <-- SỬ DỤNG SCHEDULE SCREEN THỰC TẾ
+>>>>>>> backup-main
         options={{
           tabBarIcon: ({ color }) => (
             <Feather name="calendar" color={color} size={24} />
@@ -171,4 +192,8 @@ export default function App() {
 // Định nghĩa Styles
 const styles = StyleSheet.create({
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> backup-main

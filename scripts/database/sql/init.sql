@@ -63,4 +63,17 @@ SELECT * from ket_qua_hoc_tap
 
 DELETE FROM bang_diem;
 DELETE FROM ket_qua_hoc_tap;
+<<<<<<< HEAD
 DELETE FROM hoc_phi;
+=======
+DELETE FROM hoc_phi;
+
+copy hoat_dong_ren_luyen FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\hoat_dong_ren_luyen.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
+
+copy tieu_chi FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\tieu_chi.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
+
+copy chi_tiet_hoat_dong_ren_luyen FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\chi_tiet_hoat_dong_ren_luyen.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
+>>>>>>> backup-main

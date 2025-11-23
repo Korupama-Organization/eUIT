@@ -9,6 +9,8 @@ public class eUITDbContext : DbContext
     {
     }
 
+    public DbSet<Student> Students { get; set; }
+
     /// <summary>
     /// DbSet cho quản lý Refresh Tokens
     /// Bảng này sẽ được tạo thủ công trong database bằng script SQL
