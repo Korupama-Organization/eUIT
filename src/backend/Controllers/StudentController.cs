@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using eUIT.API.Data;
 using eUIT.API.DTOs;
 using System.Security.Claims;
-using System.ComponentModel.DataAnnotations.Schema; // Thêm thư viện này
 
 namespace eUIT.API.Controllers;
 
@@ -20,101 +19,64 @@ public class StudentsController : ControllerBase
         _context = context;
     }
 
-    // --- Các lớp Model/Kết quả truy vấn nội bộ (Internal Query Result Classes) ---
-    // Các lớp này ánh xạ tới kết quả trả về từ hàm SQL trong database (thường là snake_case)
-    // Các thuộc tính trong lớp này được đổi thành PascalCase để đồng nhất với DTO và sử dụng [Column] để chỉ định tên cột DB tương ứng.
-
-    // Dùng để ánh xạ kết quả từ func_get_next_class
-    private class NextClassInfo
+    public class NextClassInfo
     {
-        [Column("ma_lop")]
-        public string MaLop { get; set; } = string.Empty;
-        [Column("ten_mon_hoc_vn")]
-        public string TenMonHocVn { get; set; } = string.Empty;
-        [Column("thu")]
-        public string Thu { get; set; } = string.Empty;
-        [Column("tiet_bat_dau")]
-        public int TietBatDau { get; set; }
-        [Column("tiet_ket_thuc")]
-        public int TietKetThuc { get; set; }
-        [Column("phong_hoc")]
-        public string PhongHoc { get; set; } = string.Empty;
-        [Column("ngay_hoc")]
-        public DateTime NgayHoc { get; set; }
-        [Column("ten_giang_vien")]
-        public string TenGiangVien { get; set; } = string.Empty;
+        public string ma_lop { get; set; } = string.Empty;
+        public string ten_mon_hoc_vn { get; set; } = string.Empty;
+        public string thu { get; set; } = string.Empty;
+        public int tiet_bat_dau { get; set; }
+        public int tiet_ket_thuc { get; set; }
+        public string phong_hoc { get; set; } = string.Empty;
+        public DateTime ngay_hoc { get; set; }
+        public string ten_giang_vien { get; set; } = string.Empty;
     }
-
-    // Dùng để ánh xạ kết quả từ func_get_student_card_info
     private class CardInfoResult
     {
-        [Column("mssv")]
-        public int Mssv { get; set; }
-        [Column("ho_ten")]
-        public string HoTen { get; set; } = string.Empty;
-        [Column("khoa_hoc")]
-        public int KhoaHoc { get; set; }
-        [Column("nganh_hoc")]
-        public string NganhHoc { get; set; } = string.Empty;
-        [Column("anh_the_url")]
-        public string? AnhTheUrl { get; set; }
+        public int mssv { get; set; }
+        public string ho_ten { get; set; } = string.Empty;
+        public int khoa_hoc { get; set; }
+        public string nganh_hoc { get; set; } = string.Empty;
+        public string? anh_the_url { get; set; }
     }
 
-    // Dùng để ánh xạ kết quả từ func_calculate_gpa
-    private class QuickGpaResult
+    private class QuickGpa
     {
-        // Chú ý: Dữ liệu mẫu Swagger cho thấy tên cột là "gpa" và "soTinChiTichLuy"
-        // 
-        [Column("gpa")] 
-        public float Gpa { get; set; }
-        [Column("so_tin_chi_tich_luy")]
-        public int SoTinChiTichLuy { get; set; } = 0;
+        public float gpa { get; set; }
+
+        public int so_tin_chi_tich_luy { get; set; } = 0;
     }
 
-    // Dùng để ánh xạ kết quả từ chi_tiet_ket_qua_hoc_tap
     private class AcademicResultQueryResult
     {
-        // 
-
-
-        [Column("hoc_ky")]
-        public string? HocKy { get; set; }
-        [Column("ma_mon_hoc")]
-        public string? MaMonHoc { get; set; }
-        [Column("ten_mon_hoc")]
-        public string? TenMonHoc { get; set; }
-        [Column("so_tin_chi")]
-        public int? SoTinChi { get; set; }
-        [Column("trong_so_qua_trinh")]
-        public int? TrongSoQuaTrinh { get; set; }
-        [Column("trong_so_giua_ki")]
-        public int? TrongSoGiuaKi { get; set; }
-        [Column("trong_so_thuc_hanh")]
-        public int? TrongSoThucHanh { get; set; }
-        [Column("trong_so_cuoi_ki")]
-        public int? TrongSoCuoiKi { get; set; }
-        [Column("diem_qua_trinh")]
-        public decimal? DiemQuaTrinh { get; set; }
-        [Column("diem_giua_ki")]
-        public decimal? DiemGiuaKi { get; set; }
-        [Column("diem_thuc_hanh")]
-        public decimal? DiemThucHanh { get; set; }
-        [Column("diem_cuoi_ki")]
-        public decimal? DiemCuoiKi { get; set; }
-        [Column("diem_tong_ket")]
-        public decimal? DiemTongKet { get; set; }
+        public string? hoc_ky { get; set; }
+        public string? ma_mon_hoc { get; set; }
+        public string? ten_mon_hoc { get; set; }
+        public int? so_tin_chi { get; set; }
+        public int? trong_so_qua_trinh { get; set; }
+        public int? trong_so_giua_ki { get; set; }
+        public int? trong_so_thuc_hanh { get; set; }
+        public int? trong_so_cuoi_ki { get; set; }
+        public decimal? diem_qua_trinh { get; set; }
+        public decimal? diem_giua_ki { get; set; }
+        public decimal? diem_thuc_hanh { get; set; }
+        public decimal? diem_cuoi_ki { get; set; }
+        public decimal? diem_tong_ket { get; set; }
     }
 
-    // --- API Endpoints ---
-
-    // GET: /nextclass
-    [HttpGet("nextclass")]
+    // GET: api/students/nextclass
+    [HttpGet("/nextclass")]
     public async Task<ActionResult<NextClassDto>> GetNextClass()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (loggedInMssv == null) return Forbid();
+        if (loggedInMssv == null)
+        {
+            return Forbid();
+        }
 
-        if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+        if (!int.TryParse(loggedInMssv, out int mssvInt))
+        {
+            return Forbid();
+        }
 
         var NextClassResult = await
         _context.Database.SqlQuery<NextClassInfo>
@@ -123,53 +85,67 @@ public class StudentsController : ControllerBase
 
         if (NextClassResult == null) return NoContent();
 
-        // Ánh xạ từ Query Result sang DTO
         var NextClass = new NextClassDto
         {
-            MaLop = NextClassResult.MaLop,
-            TenLop = NextClassResult.TenMonHocVn,
-            Thu = NextClassResult.Thu,
-            TietBatDau = NextClassResult.TietBatDau,
-            TietKetThuc = NextClassResult.TietKetThuc,
-            PhongHoc = NextClassResult.PhongHoc,
-            NgayHoc = NextClassResult.NgayHoc,
-            TenGiangVien = NextClassResult.TenGiangVien
+            MaLop = NextClassResult.ma_lop,
+            TenLop = NextClassResult.ten_mon_hoc_vn,
+            Thu = NextClassResult.thu,
+            TietBatDau = NextClassResult.tiet_bat_dau,
+            TietKetThuc = NextClassResult.tiet_ket_thuc,
+            PhongHoc = NextClassResult.phong_hoc,
+            NgayHoc = NextClassResult.ngay_hoc,
+            TenGiangVien = NextClassResult.ten_giang_vien
         };
 
         return Ok(NextClass);
     }
 
     // GET: api/students/card
-    [HttpGet("card")]
+    [HttpGet("/card")]
     public async Task<ActionResult<StudentCardDto>> GetStudentCard()
     {
+        // Bước 1: Xác định người dùng đang thực hiện yêu cầu từ Token
+        // Lấy mssv của người dùng đã đăng nhập từ claim trong JWT
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (loggedInMssv == null) return Forbid();
+        if (loggedInMssv == null)
+        {
+            return Forbid();
+        }
 
-        if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+        // Bước 2: Truy vấn thông tin sinh viên từ database ===
+        if (!int.TryParse(loggedInMssv, out int mssvInt))
+        {
+            return Forbid();
+        }
 
         var student = await
             _context.Database.SqlQuery<CardInfoResult>(
             $"SELECT * FROM func_get_student_card_info({mssvInt})")
             .FirstOrDefaultAsync();
 
-        if (student == null) return NotFound();
-
-        string? avatarFullUrl = null;
-        if (!string.IsNullOrEmpty(student.AnhTheUrl))
+        if (student == null)
         {
-            // Xây dựng URL đầy đủ cho ảnh thẻ
-            var baseUrl = $"{Request.Scheme}://{Request.Host}";
-            avatarFullUrl = $"{baseUrl}/files/{student.AnhTheUrl}"; 
+            return NotFound(); // Không tìm thấy sinh viên với mssv này
         }
 
-        // Ánh xạ từ Query Result sang DTO
+        // === Bước 3: Xây dựng đường dẫn URL đầy đủ cho ảnh thẻ ===
+        string? avatarFullUrl = null;
+        if (!string.IsNullOrEmpty(student.anh_the_url))
+        {
+            // Ghép địa chỉ server + request path + đường dẫn tương đối trong DB
+            // Ví dụ: https://localhost:5093 + /files + /Students/Avatars/23520560.jpg
+            var baseUrl = $"{Request.Scheme}://{Request.Host}";
+            avatarFullUrl = $"{baseUrl}/files/{student.anh_the_url}";
+
+        }
+
+        // === Bước 4: Ánh xạ dữ liệu từ entity của database sang DTO để trả về ===
         var studentCard = new StudentCardDto
         {
-            Mssv = student.Mssv,
-            HoTen = student.HoTen,
-            KhoaHoc = student.KhoaHoc,
-            NganhHoc = student.NganhHoc,
+            Mssv = student.mssv,
+            HoTen = student.ho_ten,
+            KhoaHoc = student.khoa_hoc,
+            NganhHoc = student.nganh_hoc,
             AvatarFullUrl = avatarFullUrl
         };
 
@@ -179,36 +155,40 @@ public class StudentsController : ControllerBase
     /// <summary>
     /// Retrieves the quick GPA and accumulated credits for the currently authenticated student.
     /// </summary>
-    // GET: /quickgpa
-    [HttpGet("quickgpa")]
+    [HttpGet("/quickgpa")]
     public async Task<ActionResult<QuickGpaDto>> GetQuickGpa()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
         if (loggedInMssv == null) return Forbid();
 
-        if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
+        if (!int.TryParse(loggedInMssv, out int mssvInt))
+        {
+            return Forbid();
+        }
 
         var result = await
-            _context.Database.SqlQuery<QuickGpaResult>(
+            _context.Database.SqlQuery<QuickGpa>(
             $"SELECT * FROM func_calculate_gpa({mssvInt})")
             .FirstOrDefaultAsync();
 
-        if (result == null) return NotFound();
+        if (result == null)
+        {
+            return NotFound(); // Không tìm thấy sinh viên với mssv này
+        }
 
-        // Ánh xạ từ Query Result sang DTO
         var gpaAndCredits = new QuickGpaDto
         {
-            Gpa = result.Gpa,
-            SoTinChiTichLuy = result.SoTinChiTichLuy
+            Gpa = result.gpa,
+            SoTinChiTichLuy = result.so_tin_chi_tich_luy
         };
 
         return Ok(gpaAndCredits);
     }
 
 
-    // GET: /academicresults
-    [HttpGet("academicresults")]
+    // GET: api/students/academicresults
+    [HttpGet("/academicresults")]
     public async Task<ActionResult<IEnumerable<AcademicResultDTO>>> GetAcademicResults()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
@@ -227,21 +207,23 @@ public class StudentsController : ControllerBase
         // Chuyển đổi từ query result sang DTO
         var academicResults = queryResults.Select(r => new AcademicResultDTO
         {
-            HocKy = r.HocKy ?? string.Empty,
-            MaMonHoc = r.MaMonHoc ?? string.Empty,
-            TenMonHoc = r.TenMonHoc ?? string.Empty,
-            SoTinChi = r.SoTinChi ?? 0,
-            TrongSoQuaTrinh = r.TrongSoQuaTrinh ?? 0,
-            TrongSoGiuaKi = r.TrongSoGiuaKi ?? 0,
-            TrongSoThucHanh = r.TrongSoThucHanh ?? 0,
-            TrongSoCuoiKi = r.TrongSoCuoiKi ?? 0,
-            DiemQuaTrinh = r.DiemQuaTrinh,
-            DiemGiuaKi = r.DiemGiuaKi,
-            DiemThucHanh = r.DiemThucHanh,
-            DiemCuoiKi = r.DiemCuoiKi,
-            DiemTongKet = r.DiemTongKet
+            HocKy = r.hoc_ky ?? string.Empty,
+            MaMonHoc = r.ma_mon_hoc ?? string.Empty,
+            TenMonHoc = r.ten_mon_hoc ?? string.Empty,
+            SoTinChi = r.so_tin_chi ?? 0,
+            TrongSoQuaTrinh = r.trong_so_qua_trinh ?? 0,
+            TrongSoGiuaKi = r.trong_so_giua_ki ?? 0,
+            TrongSoThucHanh = r.trong_so_thuc_hanh ?? 0,
+            TrongSoCuoiKi = r.trong_so_cuoi_ki ?? 0,
+            DiemQuaTrinh = r.diem_qua_trinh,
+            DiemGiuaKi = r.diem_giua_ki,
+            DiemThucHanh = r.diem_thuc_hanh,
+            DiemCuoiKi = r.diem_cuoi_ki,
+            DiemTongKet = r.diem_tong_ket
         }).ToList();
 
         return Ok(academicResults);
     }
+
+
 }

@@ -1,17 +1,18 @@
--- This script creates the eUIT database and its initial tables for managing student information, courses, and
+language plpgsql;-- This script creates the eUIT database and its initial tables for managing student information, courses, and
 --DROP DATABASE IF EXISTS "eUIT";
 
 
 
 CREATE DATABASE "eUIT"
-    WITH OWNER = postgres
+    WITH
+    OWNER = postgres
     ENCODING = 'UTF8'
-    TEMPLATE template0
-    LC_COLLATE = 'C'
-    LC_CTYPE = 'C'
-    CONNECTION LIMIT = -1;
-\c eUIT
-
+    LC_COLLATE = 'vi-VN'
+    LC_CTYPE = 'vi-VN'
+    LOCALE_PROVIDER = 'libc'
+    TABLESPACE = pg_default
+    CONNECTION LIMIT = -1
+    IS_TEMPLATE = False;
 
 --Tao bang sinh vien
 CREATE TABLE sinh_vien
@@ -80,7 +81,7 @@ CREATE TABLE sinh_vien
 	so_dien_thoai_bao_tin char(10) NOT NULL,
 
 	anh_the_url VARCHAR(255)
-);
+)
 
 CREATE TABLE giang_vien
 (
@@ -101,7 +102,7 @@ CREATE TABLE giang_vien
 	phuong_xa text NOT NULL
 
 	-- Cac thong tin khac ve giang vien co the them vao sau
-);
+)
 
 
 CREATE TABLE mon_hoc
@@ -114,7 +115,7 @@ CREATE TABLE mon_hoc
 	loai_mon_hoc char(4),
 	so_tc_ly_thuyet int,
 	so_tc_thuc_hanh int
-);
+)
  
 
 
@@ -127,7 +128,7 @@ CREATE TABLE dieu_kien_mon_hoc
 	PRIMARY KEY (ma_mon_hoc, ma_mon_hoc_dieu_kien),
 	FOREIGN KEY (ma_mon_hoc) REFERENCES mon_hoc(ma_mon_hoc),
 	FOREIGN KEY (ma_mon_hoc_dieu_kien) REFERENCES mon_hoc(ma_mon_hoc)
-);
+)
 
 
 CREATE TABLE thoi_khoa_bieu 
@@ -146,11 +147,12 @@ CREATE TABLE thoi_khoa_bieu
 	phong_hoc varchar(10), --Vi du: A101
 	si_so int, --Si so lop hoc
 	hinh_thuc_giang_day char(5), --Hinh thuc giang day (Ly thuyet:LT, DA, TTTN, KLTN; Thuc hanh: HT1, HT2, ...)
-    ghi_chu VARCHAR(255),
-    PRIMARY KEY (ma_lop, ma_giang_vien),
-    FOREIGN KEY (ma_mon_hoc) REFERENCES mon_hoc(ma_mon_hoc),
-    FOREIGN KEY (ma_giang_vien) REFERENCES giang_vien(ma_giang_vien)
-);
+	ghi_chu VARCHAR(255), --Ghi chu ve lop hoc
+	PRIMARY KEY (ma_lop, ma_giang_vien),
+	FOREIGN KEY (ma_mon_hoc) REFERENCES mon_hoc(ma_mon_hoc),
+	FOREIGN KEY (ma_giang_vien) REFERENCES giang_vien(ma_giang_vien)
+)
+
 
 CREATE TABLE bang_diem (
     ma_lop CHAR(20) PRIMARY KEY,              -- Ví dụ: IT001.P11.CNVN
@@ -189,7 +191,7 @@ CREATE TABLE hoc_phi
 	so_tien_con_lai float , --So tien con lai can dong/con thua
 	PRIMARY KEY (mssv, hoc_ky),
 	FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv)
-);
+)
 -- Update so tien da dong
 UPDATE hoc_phi
 SET da_dong = 17000000.00
@@ -212,7 +214,7 @@ CREATE TABLE dang_ky_gui_xe
 	ngay_het_han DATE NOT NULL, --Ngay het han dang ky
 	PRIMARY KEY (mssv, ma_bien_so),
 	FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv)	
-);
+)
 
 CREATE TABLE xac_nhan_chung_chi
 (
@@ -225,7 +227,7 @@ CREATE TABLE xac_nhan_chung_chi
 	ghi_chu VARCHAR(100), -- Ghi chu ve chung chi
 	PRIMARY KEY (mssv, ma_chung_chi),
 	FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv)
-);
+)
 
 CREATE TABLE thong_bao
 (
@@ -288,7 +290,7 @@ CREATE TABLE coi_thi
 	FOREIGN KEY (giam_thi_1) REFERENCES giang_vien(ma_giang_vien) ON DELETE SET NULL ON UPDATE CASCADE,
 	FOREIGN KEY (giam_thi_2) REFERENCES giang_vien(ma_giang_vien) ON DELETE SET NULL
 
-);
+)
 
 --Nhom bang diem ren luyen
 CREATE TABLE tieu_chi
@@ -300,7 +302,7 @@ CREATE TABLE tieu_chi
 
 	FOREIGN KEY (tieu_chi_cha) REFERENCES tieu_chi(tieu_chi)
 
-);
+)
 
 CREATE TABLE hoat_dong_ren_luyen
 (
@@ -328,3 +330,9 @@ CREATE TABLE chi_tiet_hoat_dong_ren_luyen
 	FOREIGN KEY (mssv) REFERENCES sinh_vien(mssv),
 	FOREIGN KEY (ma_hoat_dong) REFERENCES hoat_dong_ren_luyen(ma_hoat_dong)
 );
+
+
+
+
+
+

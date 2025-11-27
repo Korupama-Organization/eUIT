@@ -160,7 +160,7 @@ JOIN mon_hoc AS mh ON tkb.ma_mon_hoc = mh.ma_mon_hoc
 ORDER BY tkb.ma_mon_hoc;
 $$;
 
-SELECT * FROM func_get_student_semester_transcript(23520541, '2025_2026_1');
+SELECT * FROM func_get_student_semester_transcript(23520541, '2025_2026_1')
 
 -- ---------------------------------------------------------------------------------
 -- HÀM 3: Lấy bảng điểm TOÀN KHÓA của MỘT sinh viên.
@@ -200,7 +200,7 @@ JOIN mon_hoc AS mh ON tkb.ma_mon_hoc = mh.ma_mon_hoc
 ORDER BY tkb.hoc_ky, tkb.ma_mon_hoc;
 $$;
 
-SELECT * FROM func_get_student_full_transcript(23520545);
+SELECT * FROM func_get_student_full_transcript(23520545)
 
 
 -- ---------------------------------------------------------------------------------
@@ -235,7 +235,7 @@ FROM
     BangDiem AS bd;
 $$;
 
-SELECT * FROM func_calculate_gpa(23520541);
+SELECT * FROM func_calculate_gpa(23520541)
 
 
 -- ---------------------------------------------------------------------------------
@@ -291,7 +291,7 @@ JOIN LATERAL func_get_student_subject_grade(dssv.mssv, p_ma_lop_goc) AS dtk ON T
 ORDER BY sv.ho_ten;
 $$;
 
-SELECT * FROM func_get_class_grade_list('IT001.O11');
+SELECT * FROM func_get_class_grade_list('IT001.O11')
 
 -- ---------------------------------------------------------------------------------
 -- HÀM 6: Lấy tiết học tiếp theo của MỘT sinh viên.
@@ -350,7 +350,7 @@ NextDates AS (
     SELECT 
         s.*,
         CURRENT_DATE + INTERVAL '1 day' * (
-((s.target_dow - CAST(EXTRACT(DOW FROM CURRENT_DATE) AS int) + 7) % 7)
+            (s.target_dow - EXTRACT(DOW FROM CURRENT_DATE) + 7) % 7
         ) AS candidate_date
     FROM Schedules AS s
     WHERE s.target_dow IS NOT NULL

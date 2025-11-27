@@ -1,14 +1,16 @@
-using eUIT.API.Data; // Thêm để "thấy" eUITDbContext
-using Microsoft.EntityFrameworkCore; // Thêm để sử dụng UseNpgsql
-using Microsoft.AspNetCore.Authentication.JwtBearer; // Thêm để sử dụng JwtBearerDefaults
-using Microsoft.IdentityModel.Tokens; // Thêm để sử dụng TokenValidationParameters, SymmetricSecurityKey
-using System.Text; // Thêm để sử dụng Encoding.UTF8
+using eUIT.API.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Microsoft.OpenApi.Models;
 using Microsoft.Extensions.FileProviders;
+using eUIT.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Thêm dịch vụ vào ứng dụng ---
+builder.WebHost.UseUrls("http://0.0.0.0:5128");
 
 // Thêm dịch vụ Controllers
 builder.Services.AddControllers();
@@ -28,11 +30,16 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-builder.Services.AddScoped<eUIT.API.Services.ITokenService, eUIT.API.Services.TokenService>();
-builder.Services.AddScoped<eUIT.API.Services.IChatbotService, eUIT.API.Services.ChatbotService>();
+// builder.Services.AddScoped(); // Dòng 32
+// builder.Services.AddScoped(); // Dòng 33
+// builder.Services.AddHostedService(); // Dòng 39
 
-// Background service để dọn dẹp token hết hạn
-builder.Services.AddHostedService<eUIT.API.Services.TokenCleanupService>();
+// Đăng ký AbsenceService cho IAbsenceService
+builder.Services.AddScoped<IAbsenceService, AbsenceService>();
+builder.Services.AddScoped<IAnnouncementService, AnnouncementService>();
+builder.Services.AddScoped<IStudentService, StudentService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
+
 
 // Thêm HttpClient cho Gemini AI
 builder.Services.AddHttpClient();
@@ -43,7 +50,6 @@ var connectionString = builder.Configuration.GetConnectionString("eUITDatabase")
 // Thêm dịch vụ DbContext để làm việc với database PostgreSQL
 builder.Services.AddDbContext<eUITDbContext>(options =>
     options.UseNpgsql(connectionString));
-
 
 // Thêm Swagger
 builder.Services.AddEndpointsApiExplorer();
@@ -94,14 +100,9 @@ app.UseStaticFiles(new StaticFileOptions
 });
 
 app.UseRouting();
-
-
 app.UseHttpsRedirection();
-
-app.UseAuthentication(); 
-app.UseAuthorization();  
-
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
-
 
 app.Run();

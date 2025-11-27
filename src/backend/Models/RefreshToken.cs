@@ -7,7 +7,7 @@ namespace eUIT.API.Models;
 /// Entity đại diện cho Refresh Token được lưu trong database
 /// Mỗi user có thể có nhiều refresh token (đăng nhập trên nhiều thiết bị)
 /// </summary>
-[Table("refresh_tokens")]
+[Table("auth_refresh_tokens")]
 public class RefreshToken
 {
     /// <summary>
