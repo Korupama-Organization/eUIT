@@ -79,7 +79,7 @@ public class eUITDbContext : DbContext
             entity.HasKey(e => e.Id);
         });
 
-        // 🔥 Cấu hình cho Student entity (sinh_vien)
+        //Cấu hình cho Student entity (sinh_vien)
         modelBuilder.Entity<Student>(entity =>
         {
             entity.ToTable("sinh_vien");
