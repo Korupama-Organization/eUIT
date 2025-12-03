@@ -1,4 +1,3 @@
-
 /**
  * Auth Types - Định nghĩa các kiểu dữ liệu cho authentication
  */
@@ -46,25 +45,25 @@
 
 // Các role được hỗ trợ
 export const USER_ROLES = {
-  STUDENT: 'student',
-  LECTURER: 'lecturer', 
-  ADMIN: 'admin'
+  STUDENT: "student",
+  LECTURER: "lecturer",
+  ADMIN: "admin",
 };
 
 // Các trạng thái auth
 export const AUTH_STATUS = {
-  IDLE: 'idle',
-  LOADING: 'loading',
-  AUTHENTICATED: 'authenticated',
-  UNAUTHENTICATED: 'unauthenticated',
-  ERROR: 'error'
+  IDLE: "idle",
+  LOADING: "loading",
+  AUTHENTICATED: "authenticated",
+  UNAUTHENTICATED: "unauthenticated",
+  ERROR: "error",
 };
 
 // Các loại lỗi auth
 export const AUTH_ERRORS = {
-  INVALID_CREDENTIALS: 'Invalid credentials',
-  NETWORK_ERROR: 'Network error',
-  TOKEN_EXPIRED: 'Token expired',
-  INVALID_TOKEN: 'Invalid token',
-  SERVER_ERROR: 'Server error'
+  INVALID_CREDENTIALS: "Invalid credentials",
+  NETWORK_ERROR: "Network error",
+  TOKEN_EXPIRED: "Token expired",
+  INVALID_TOKEN: "Invalid token",
+  SERVER_ERROR: "Server error",
 };
