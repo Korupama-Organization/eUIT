@@ -535,7 +535,7 @@ public class PersonalSchedule
         if (!allowedExtensions.Contains(extension))
             return BadRequest("Invalid file type. Only jpg, jpeg, png allowed.");
 
-        var student = await _context.Students.FirstOrDefaultAsync(s => s.Mssv == mssvInt);
+        var student = await _context.sinh_vien.FirstOrDefaultAsync(s => s.Mssv == mssvInt);
         if (student == null) return NotFound();
 
         if (!string.IsNullOrEmpty(student.AnhTheUrl))
