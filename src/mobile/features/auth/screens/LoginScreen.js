@@ -126,151 +126,144 @@ const LoginScreen = ({ navigation, setIsLoggedIn }) => {
   };
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]}>
-      <StatusBar
-        barStyle={isDark ? "light-content" : "dark-content"}
-        backgroundColor={theme.bg}
-      />
+<SafeAreaView style={[styles.container, { backgroundColor: theme.bg }]}>
+  <StatusBar
+    barStyle={isDark ? "light-content" : "dark-content"}
+    backgroundColor={theme.bg}
+  />
 
-      {/* Nút đổi theme cố định góc phải */}
-      <View style={styles.headerContainer}>
-        <TouchableOpacity
-          onPress={() => setIsDark(!isDark)}
-          style={styles.toggleBtn}
-        >
-          {isDark ? (
-            <Sun color={theme.primary} size={22} />
-          ) : (
-            <Moon color={theme.primary} size={22} />
-          )}
-        </TouchableOpacity>
+  {/* Nút đổi theme cố định góc phải */}
+  <View style={styles.headerContainer}>
+    <TouchableOpacity onPress={() => setIsDark(!isDark)} style={styles.toggleBtn}>
+      {isDark ? (
+        <Sun color={theme.primary} size={22} />
+      ) : (
+        <Moon color={theme.primary} size={22} />
+      )}
+    </TouchableOpacity>
+  </View>
+
+  {/*Phần nội dung chính */}
+  <KeyboardAvoidingView
+    behavior={Platform.OS === "ios" ? "padding" : "height"}
+    style={styles.keyboardAvoidingView}
+  >
+    <ScrollView
+      contentContainerStyle={styles.scrollContainer}
+      keyboardShouldPersistTaps="handled"
+    >
+      {/* 🔹 Logo UIT giữa phía trên card */}
+      <View style={styles.logoTopContainer}>
+        <Image source={uitLogo} style={styles.logoTop} resizeMode="contain" />
       </View>
 
-      {/*Phần nội dung chính */}
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={styles.keyboardAvoidingView}
+      {/* 🔹 Card chính */}
+      <Animated.View
+        style={[
+          styles.card,
+          {
+            backgroundColor: theme.card,
+            shadowColor: theme.shadow,
+            opacity: fadeAnim,
+            transform: [{ translateY: slideAnim }],
+          },
+        ]}
       >
-        <ScrollView
-          contentContainerStyle={styles.scrollContainer}
-          keyboardShouldPersistTaps="handled"
+        {/* Toggle Vai trò */}
+        <View
+          style={[
+            styles.roleToggleContainer,
+            { backgroundColor: isDark ? "#0C1445" : "#E5E7EB" },
+          ]}
         >
-          {/* 🔹 Logo UIT giữa phía trên card */}
-          <View style={styles.logoTopContainer}>
-            <Image
-              source={uitLogo}
-              style={styles.logoTop}
-              resizeMode="contain"
-            />
-          </View>
-
-          {/* 🔹 Card chính */}
-          <Animated.View
-            style={[
-              styles.card,
-              {
-                backgroundColor: theme.card,
-                shadowColor: theme.shadow,
-                opacity: fadeAnim,
-                transform: [{ translateY: slideAnim }],
-              },
-            ]}
-          >
-            {/* Toggle Vai trò */}
-            <View
+          {[
+            { key: USER_ROLES.STUDENT, label: "Sinh viên" },
+            { key: USER_ROLES.LECTURER, label: "Giảng viên" },
+          ].map((item) => (
+            <TouchableOpacity
+              key={item.key}
               style={[
-                styles.roleToggleContainer,
-                { backgroundColor: isDark ? "#0C1445" : "#E5E7EB" },
+                styles.roleButton,
+                {
+                  backgroundColor:
+                    formData.role === item.key
+                      ? theme.buttonBg
+                      : "transparent",
+                },
               ]}
+              onPress={() => handleInputChange("role", item.key)}
             >
-              {[
-                { key: USER_ROLES.STUDENT, label: "Sinh viên" },
-                { key: USER_ROLES.LECTURER, label: "Giảng viên" },
-              ].map((item) => (
-                <TouchableOpacity
-                  key={item.key}
-                  style={[
-                    styles.roleButton,
-                    {
-                      backgroundColor:
-                        formData.role === item.key
-                          ? theme.buttonBg
-                          : "transparent",
-                    },
-                  ]}
-                  onPress={() => handleInputChange("role", item.key)}
-                >
-                  <Text
-                    style={{
-                      color:
-                        formData.role === item.key
-                          ? theme.buttonText
-                          : theme.text,
-                      fontWeight: "600",
-                    }}
-                  >
-                    {item.label}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-
-            {/* Input fields */}
-            <InputField
-              label="Mã số"
-              value={formData.userId}
-              onChangeText={(v) => handleInputChange("userId", v)}
-              placeholder={
-                formData.role === USER_ROLES.STUDENT
-                  ? "Nhập MSSV (VD: 23520541)"
-                  : "Nhập mã giảng viên (VD: 80068)"
-              }
-              keyboardType={
-                formData.role === USER_ROLES.STUDENT ? "numeric" : "default"
-              }
-              error={errors.userId}
-              themeColor={theme.primary}
-              textColor={theme.text}
-              placeholderColor={theme.placeholder}
-            />
-
-            <InputField
-              label="Mật khẩu"
-              value={formData.password}
-              onChangeText={(v) => handleInputChange("password", v)}
-              placeholder="Nhập mật khẩu"
-              secureTextEntry
-              showPasswordToggle
-              error={errors.password}
-              themeColor={theme.primary}
-              textColor={theme.text}
-              placeholderColor={theme.placeholder}
-            />
-
-            <LoginButton
-              title={loading ? "Đang đăng nhập..." : "Đăng nhập"}
-              onPress={handleLogin}
-              loading={loading}
-              disabled={loading}
-              bgColor={theme.buttonBg}
-              textColor={theme.buttonText}
-              shadowColor={theme.shadow}
-              style={{ marginTop: 12 }}
-            />
-
-            {/* Footer */}
-            <View style={styles.footer}>
-              <Text style={[styles.footerText, { color: theme.subtext }]}>
-                Bạn quên mật khẩu?{" "}
-                <Text style={[styles.footerLink, { color: theme.link }]}>
-                  Khôi phục tại đây
-                </Text>
+              <Text
+                style={{
+                  color:
+                    formData.role === item.key
+                      ? theme.buttonText
+                      : theme.text,
+                  fontWeight: "600",
+                }}
+              >
+                {item.label}
               </Text>
-            </View>
-          </Animated.View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* Input fields */}
+        <InputField
+          label="Mã số"
+          value={formData.userId}
+          onChangeText={(v) => handleInputChange("userId", v)}
+          placeholder={
+            formData.role === USER_ROLES.STUDENT
+              ? "Nhập MSSV (VD: 23520541)"
+              : "Nhập mã giảng viên (VD: 80068)"
+          }
+          keyboardType={
+            formData.role === USER_ROLES.STUDENT ? "numeric" : "default"
+          }
+          error={errors.userId}
+          themeColor={theme.primary}
+          textColor={theme.text}
+          placeholderColor={theme.placeholder}
+        />
+
+        <InputField
+          label="Mật khẩu"
+          value={formData.password}
+          onChangeText={(v) => handleInputChange("password", v)}
+          placeholder="Nhập mật khẩu"
+          secureTextEntry
+          showPasswordToggle
+          error={errors.password}
+          themeColor={theme.primary}
+          textColor={theme.text}
+          placeholderColor={theme.placeholder}
+        />
+
+        <LoginButton
+          title={loading ? "Đang đăng nhập..." : "Đăng nhập"}
+          onPress={handleLogin}
+          loading={loading}
+          disabled={loading}
+          bgColor={theme.buttonBg}
+          textColor={theme.buttonText}
+          shadowColor={theme.shadow}
+          style={{ marginTop: 12 }}
+        />
+
+        {/* Footer */}
+        <View style={styles.footer}>
+          <Text style={[styles.footerText, { color: theme.subtext }]}>
+            Bạn quên mật khẩu?{" "}
+            <Text style={[styles.footerLink, { color: theme.link }]}>
+              Khôi phục tại đây
+            </Text>
+          </Text>
+        </View>
+      </Animated.View>
+    </ScrollView>
+  </KeyboardAvoidingView>
+</SafeAreaView>
   );
 };
 
@@ -283,7 +276,7 @@ const lightTheme = {
   subtext: "#6B7280",
   placeholder: "#9AA5C4",
   border: "#D1D5DB",
-  buttonBg: "#2F6BFF",
+  buttonBg: "#2F6BFF", 
   buttonText: "#FFFFFF",
   link: "#3B82F6",
   shadow: "#0032AF",
@@ -297,7 +290,7 @@ const darkTheme = {
   subtext: "#9CA3AF",
   placeholder: "#9CA3AF",
   border: "#1F2937",
-  buttonBg: "#7AF8FF",
+  buttonBg: "#7AF8FF", 
   buttonText: "#000000",
   link: "#7AF8FF",
   shadow: "#7AF8FF",
@@ -310,16 +303,16 @@ const styles = StyleSheet.create({
   },
 
   scrollContainer: {
-    flexGrow: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    paddingTop: 120,
-    paddingBottom: 40,
+  flexGrow: 1,
+  justifyContent: "flex-start", 
+  alignItems: "center",
+  paddingTop: 120,            
+  paddingBottom: 40,
   },
 
   logoTopContainer: {
-    alignItems: "center",
-    marginBottom: 20,
+  alignItems: "center",
+  marginBottom: 20, 
   },
   logoTop: {
     width: 120,
@@ -327,7 +320,7 @@ const styles = StyleSheet.create({
   },
   card: {
     width: "90%",
-    maxWidth: 420,
+    maxWidth: 420, 
     borderRadius: 18,
     padding: 28,
     elevation: 6,

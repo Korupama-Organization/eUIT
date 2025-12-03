@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 ma_lop,mssv,ma_lop_goc,diem_qua_trinh,diem_giua_ki,diem_thuc_hanh,diem_cuoi_ki,diem_tong_ket
+=======
+ma_lop,mssv,ma_lop_goc,diem_qua_trinh,diem_giua_ki,diem_thuc_hanh,diem_cuoi_ki,ghi_chu
+>>>>>>> fixing
 IT001.O11,23520541,IT001.O11,10,,,9,
 IT001.O11.1,23520541,IT001.O11,,,10,,
 MA003.O11,23520541,MA003.O11,10,10,,9,
@@ -1958,4 +1962,8 @@ IE307.Q12,23520589,IE307.Q12,,,,,
 IE307.Q12.1,23520589,IE307.Q12,,,,,
 SE104.Q13,23520589,SE104.Q13,,,,,
 SE104.Q13.1,23520589,SE104.Q13,,,,,
+<<<<<<< HEAD
 PE231.Q116,23520589,PE231.Q116,,,,,
+=======
+PE231.Q116,23520589,PE231.Q116,,,,,
+>>>>>>> fixing

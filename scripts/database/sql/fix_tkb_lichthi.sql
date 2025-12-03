@@ -39,13 +39,15 @@ CREATE TABLE lich_thi (
     ca_thi INT NOT NULL,
     phong_thi VARCHAR(10) NOT NULL,
     ghi_chu VARCHAR(255),
+
     -- ✅ Khóa chính (1 lớp thi duy nhất 1 ca, 1 giảng viên)
     PRIMARY KEY (ma_lop, ma_giang_vien, ca_thi),
+
     -- ✅ Khóa ngoại khớp với bảng thời khóa biểu đã chỉnh
     FOREIGN KEY (ma_lop, ma_giang_vien) 
         REFERENCES thoi_khoa_bieu(ma_lop, ma_giang_vien)
         ON DELETE CASCADE,
+
     FOREIGN KEY (ma_mon_hoc) 
         REFERENCES mon_hoc(ma_mon_hoc)
 );
-

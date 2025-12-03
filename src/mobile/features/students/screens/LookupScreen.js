@@ -250,4 +250,3 @@ const getStyles = (isDark) => {
 };
 
 export default LookupScreen;
-

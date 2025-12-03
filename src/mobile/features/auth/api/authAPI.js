@@ -1,10 +1,8 @@
-/**
- * Auth API - Giao tiếp với backend để xác thực người dùng
- */
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AUTH_ERRORS } from "../types/auth.types.js";
 import { API_BASE_URL } from "@env";
+
+// const API_BASE_URL = "http://192.168.1.15:5128/api";
 
 const AUTH_ENDPOINTS = {
   LOGIN: `${API_BASE_URL}/auth/login`,
@@ -187,7 +185,6 @@ export const login = async (credentials) => {
     } else if (!error.status) {
       throw { ...error, message: AUTH_ERRORS.NETWORK_ERROR };
     }
-
     throw error;
   }
 };
@@ -231,7 +228,6 @@ export const refreshToken = async () => {
       await clearTokens();
       throw { ...error, message: AUTH_ERRORS.TOKEN_EXPIRED };
     }
-
     throw error;
   }
 };
@@ -261,7 +257,6 @@ export const getProfile = async () => {
         throw { ...refreshError, message: AUTH_ERRORS.TOKEN_EXPIRED };
       }
     }
-
     throw error;
   }
 };

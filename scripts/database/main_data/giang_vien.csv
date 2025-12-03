@@ -241,4 +241,8 @@
 80244,Lê Văn Thành,TTNN,1984-02-26,Tỉnh Nghệ An,001184541152,2007-07-22,Công an TP. Hồ Chí Minh,Tày,Tin Lành,0352181599,"722 đường Nguyễn Trãi, Xã Tiền Phong",Tỉnh Nghệ An,Xã Tiền Phong
 80245,Bùi Thị Nga,TTNN,1975-01-04,Tỉnh Thái Nguyên,092075688444,1993-08-10,Công an tỉnh Đồng Nai,Tày,Không,0821069872,"370 đường Nguyễn Trãi, Xã Đồng Hỷ",Tỉnh Thái Nguyên,Xã Đồng Hỷ
 80246,Phan Thị Lan,TTNN,1976-02-01,Tỉnh Hà Tĩnh,024076171467,1998-03-20,Công an tỉnh Bình Dương,Kinh,Công giáo,0384186256,"192 đường Điện Biên Phủ, Xã Kỳ Hoa",Tỉnh Hà Tĩnh,Xã Kỳ Hoa
+<<<<<<< HEAD
 *, NULL, NULL, 2000-01-01, NULL, NULL, 2000-01-01, NULL, NULL, NULL,0000000000, NULL, NULL, NULL
+=======
+*, NULL, NULL, 2000-01-01, NULL, NULL, 2000-01-01, NULL, NULL, NULL, 0000000000, NULL, NULL, NULL
+>>>>>>> fixing

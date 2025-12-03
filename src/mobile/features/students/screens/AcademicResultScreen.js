@@ -527,4 +527,3 @@ const getStyles = (isDarkMode) => StyleSheet.create({
 });
 
 export default AcademicResultScreen;
-

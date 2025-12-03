@@ -58,7 +58,6 @@ Schedules AS (
     FROM Classes AS c
     JOIN thoi_khoa_bieu AS tkb ON c.ma_lop = tkb.ma_lop
     JOIN mon_hoc AS mh ON tkb.ma_mon_hoc = mh.ma_mon_hoc
-    JOIN giang_vien AS gv ON tkb.ma_giang_vien = gv.ma_giang_vien
     WHERE tkb.hinh_thuc_giang_day != 'HT2'
       AND tkb.ngay_ket_thuc >= CURRENT_DATE
 ),
