@@ -212,7 +212,6 @@ public class StudentsController : ControllerBase
         [Column("ghi_chu")] public string? GhiChu { get; set; }
     }
 
-    // ======= Giữ nguyên toàn bộ API từ file thứ hai =======
     [HttpGet("nextclass")]
     public async Task<ActionResult<NextClassDto>> GetNextClass()
     {
@@ -512,7 +511,6 @@ public async Task<ActionResult<IEnumerable<RegisteredCourseDto>>> GetRegisteredC
 
     if (!coursesQuery.Any()) return NoContent();
 
-    // Map sang DTO public nếu muốn tách lớp private/public
     var courses = coursesQuery.Select(c => new RegisteredCourseDto
     {
         MaLop = c.MaLop,
