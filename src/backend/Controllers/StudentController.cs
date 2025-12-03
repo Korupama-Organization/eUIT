@@ -446,7 +446,7 @@ public class PersonalSchedule
             DiemTongKet = r.DiemTongKet
         }).ToList();
 
-        return Ok(dtos);
+        return Ok(academicResults);
     }
 
     [HttpGet("schedule/{hocKy}")]

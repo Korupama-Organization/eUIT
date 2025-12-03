@@ -10,6 +10,8 @@ public class eUITDbContext : DbContext
     }
 
     public DbSet<Student> Students { get; set; }
+    public DbSet<Courses> Courses { get; set; }
+
 
     /// <summary>
     /// DbSet cho quản lý Refresh Tokens

@@ -249,8 +249,5 @@ const getStyles = (isDark) => {
     });
 };
 
-<<<<<<< HEAD
 export default LookupScreen;
-=======
-export default LookupScreen;
->>>>>>> backup-main
+

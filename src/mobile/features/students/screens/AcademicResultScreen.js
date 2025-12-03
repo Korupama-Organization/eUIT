@@ -526,8 +526,5 @@ const getStyles = (isDarkMode) => StyleSheet.create({
     },
 });
 
-<<<<<<< HEAD
 export default AcademicResultScreen;
-=======
-export default AcademicResultScreen;
->>>>>>> backup-main
+
