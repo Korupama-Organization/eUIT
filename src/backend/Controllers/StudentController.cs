@@ -8,9 +8,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eUIT.API.Controllers;
 
-[Authorize] // Yêu cầu tất cả các API trong controller này đều phải được xác thực
+[Authorize]
 [ApiController]
-[Route("api/[controller]")] // Đường dẫn sẽ là /api/students
+[Route("api/[controller]")]
 public class StudentsController : ControllerBase
 {
     private readonly eUITDbContext _context;
@@ -20,6 +20,7 @@ public class StudentsController : ControllerBase
         _context = context;
     }
 
+    // ======= Class nội bộ =======
     private class NextClassInfo
     {
         [Column("ma_lop")]
@@ -114,186 +115,112 @@ public class StudentsController : ControllerBase
 
     private class StudentProfileQueryResult
     {
-        [Column("mssv")]
-        public int Mssv { get; set; }
-        [Column("ho_ten")]
-        public string HoTen { get; set; } = string.Empty;
-        [Column("ngay_sinh")]
-        public DateOnly NgaySinh { get; set; }
-        [Column("nganh_hoc")]
-        public string NganhHoc { get; set; } = string.Empty;
-        [Column("khoa_hoc")]
-        public int KhoaHoc { get; set; }
-        [Column("lop_sinh_hoat")]
-        public string LopSinhHoat { get; set; } = string.Empty;
+        // Giữ nguyên các cột như file thứ hai
+        [Column("mssv")] public int Mssv { get; set; }
+        [Column("ho_ten")] public string HoTen { get; set; } = string.Empty;
+        [Column("ngay_sinh")] public DateOnly NgaySinh { get; set; }
+        [Column("nganh_hoc")] public string NganhHoc { get; set; } = string.Empty;
+        [Column("khoa_hoc")] public int KhoaHoc { get; set; }
+        [Column("lop_sinh_hoat")] public string LopSinhHoat { get; set; } = string.Empty;
+        [Column("noi_sinh")] public string? NoiSinh { get; set; }
+        [Column("cccd")] public string? Cccd { get; set; }
+        [Column("ngay_cap_cccd")] public DateOnly? NgayCapCccd { get; set; }
+        [Column("noi_cap_cccd")] public string? NoiCapCccd { get; set; }
+        [Column("dan_toc")] public string? DanToc { get; set; }
+        [Column("ton_giao")] public string? TonGiao { get; set; }
+        [Column("so_dien_thoai")] public string? SoDienThoai { get; set; }
+        [Column("dia_chi_thuong_tru")] public string? DiaChiThuongTru { get; set; }
+        [Column("tinh_thanh_pho")] public string? TinhThanhPho { get; set; }
+        [Column("phuong_xa")] public string? PhuongXa { get; set; }
+        [Column("qua_trinh_hoc_tap_cong_tac")] public string? QuaTrinhHocTapCongTac { get; set; }
+        [Column("thanh_tich")] public string? ThanhTich { get; set; }
+        [Column("email_ca_nhan")] public string? EmailCaNhan { get; set; }
+        [Column("ma_ngan_hang")] public string? MaNganHang { get; set; }
+        [Column("ten_ngan_hang")] public string? TenNganHang { get; set; }
+        [Column("so_tai_khoan")] public string? SoTaiKhoan { get; set; }
+        [Column("chi_nhanh")] public string? ChiNhanh { get; set; }
 
-        [Column("noi_sinh")]
-        public string? NoiSinh { get; set; }
-        [Column("cccd")]
-        public string? Cccd { get; set; }
-        [Column("ngay_cap_cccd")]
-        public DateOnly? NgayCapCccd { get; set; }
-        [Column("noi_cap_cccd")]
-        public string? NoiCapCccd { get; set; }
-        [Column("dan_toc")]
-        public string? DanToc { get; set; }
-        [Column("ton_giao")]
-        public string? TonGiao { get; set; }
-        [Column("so_dien_thoai")]
-        public string? SoDienThoai { get; set; }
-        [Column("dia_chi_thuong_tru")]
-        public string? DiaChiThuongTru { get; set; }
-        [Column("tinh_thanh_pho")]
-        public string? TinhThanhPho { get; set; }
-        [Column("phuong_xa")]
-        public string? PhuongXa { get; set; }
-        [Column("qua_trinh_hoc_tap_cong_tac")]
-        public string? QuaTrinhHocTapCongTac { get; set; }
-        [Column("thanh_tich")]
-        public string? ThanhTich { get; set; }
-        [Column("email_ca_nhan")]
-        public string? EmailCaNhan { get; set; }
+        [Column("ho_ten_cha")] public string? HoTenCha { get; set; }
+        [Column("quoc_tich_cha")] public string? QuocTichCha { get; set; }
+        [Column("dan_toc_cha")] public string? DanTocCha { get; set; }
+        [Column("ton_giao_cha")] public string? TonGiaoCha { get; set; }
+        [Column("sdt_cha")] public string? SdtCha { get; set; }
+        [Column("email_cha")] public string? EmailCha { get; set; }
+        [Column("dia_chi_thuong_tru_cha")] public string? DiaChiThuongTruCha { get; set; }
+        [Column("cong_viec_cha")] public string? CongViecCha { get; set; }
 
-        [Column("ma_ngan_hang")]
-        public string? MaNganHang { get; set; }
-        [Column("ten_ngan_hang")]
-        public string? TenNganHang { get; set; }
-        [Column("so_tai_khoan")]
-        public string? SoTaiKhoan { get; set; }
-        [Column("chi_nhanh")]
-        public string? ChiNhanh { get; set; }
+        [Column("ho_ten_me")] public string? HoTenMe { get; set; }
+        [Column("quoc_tich_me")] public string? QuocTichMe { get; set; }
+        [Column("dan_toc_me")] public string? DanTocMe { get; set; }
+        [Column("ton_giao_me")] public string? TonGiaoMe { get; set; }
+        [Column("sdt_me")] public string? SdtMe { get; set; }
+        [Column("email_me")] public string? EmailMe { get; set; }
+        [Column("dia_chi_thuong_tru_me")] public string? DiaChiThuongTruMe { get; set; }
+        [Column("cong_viec_me")] public string? CongViecMe { get; set; }
 
-        [Column("ho_ten_cha")]
-        public string? HoTenCha { get; set; }
-        [Column("quoc_tich_cha")]
-        public string? QuocTichCha { get; set; }
-        [Column("dan_toc_cha")]
-        public string? DanTocCha { get; set; }
-        [Column("ton_giao_cha")]
-        public string? TonGiaoCha { get; set; }
-        [Column("sdt_cha")]
-        public string? SdtCha { get; set; }
-        [Column("email_cha")]
-        public string? EmailCha { get; set; }
-        [Column("dia_chi_thuong_tru_cha")]
-        public string? DiaChiThuongTruCha { get; set; }
-        [Column("cong_viec_cha")]
-        public string? CongViecCha { get; set; }
+        [Column("ho_ten_ngh")] public string? HoTenNgh { get; set; }
+        [Column("quoc_tich_ngh")] public string? QuocTichNgh { get; set; }
+        [Column("dan_toc_ngh")] public string? DanTocNgh { get; set; }
+        [Column("ton_giao_ngh")] public string? TonGiaoNgh { get; set; }
+        [Column("sdt_ngh")] public string? SdtNgh { get; set; }
+        [Column("email_ngh")] public string? EmailNgh { get; set; }
+        [Column("dia_chi_thuong_tru_ngh")] public string? DiaChiThuongTruNgh { get; set; }
+        [Column("cong_viec_ngh")] public string? CongViecNgh { get; set; }
 
-        [Column("ho_ten_me")]
-        public string? HoTenMe { get; set; }
-        [Column("quoc_tich_me")]
-        public string? QuocTichMe { get; set; }
-        [Column("dan_toc_me")]
-        public string? DanTocMe { get; set; }
-        [Column("ton_giao_me")]
-        public string? TonGiaoMe { get; set; }
-        [Column("sdt_me")]
-        public string? SdtMe { get; set; }
-        [Column("email_me")]
-        public string? EmailMe { get; set; }
-        [Column("dia_chi_thuong_tru_me")]
-        public string? DiaChiThuongTruMe { get; set; }
-        [Column("cong_viec_me")]
-        public string? CongViecMe { get; set; }
-
-        [Column("ho_ten_ngh")]
-        public string? HoTenNgh { get; set; }
-        [Column("quoc_tich_ngh")]
-        public string? QuocTichNgh { get; set; }
-        [Column("dan_toc_ngh")]
-        public string? DanTocNgh { get; set; }
-        [Column("ton_giao_ngh")]
-        public string? TonGiaoNgh { get; set; }
-        [Column("sdt_ngh")]
-        public string? SdtNgh { get; set; }
-        [Column("email_ngh")]
-        public string? EmailNgh { get; set; }
-        [Column("dia_chi_thuong_tru_ngh")]
-        public string? DiaChiThuongTruNgh { get; set; }
-        [Column("cong_viec_ngh")]
-        public string? CongViecNgh { get; set; }
-
-        [Column("thong_tin_nguoi_can_bao_tin")]
-        public string? ThongTinNguoiCanBaoTin { get; set; }
-        [Column("so_dien_thoai_bao_tin")]
-        public string? SoDienThoaiBaoTin { get; set; }
-
-        [Column("anh_the_url")]
-        public string? AnhTheUrl { get; set; }
+        [Column("thong_tin_nguoi_can_bao_tin")] public string? ThongTinNguoiCanBaoTin { get; set; }
+        [Column("so_dien_thoai_bao_tin")] public string? SoDienThoaiBaoTin { get; set; }
+        [Column("anh_the_url")] public string? AnhTheUrl { get; set; }
     }
 
     private class RegisteredCourseQueryResult
-{
-    [Column("ma_lop")]
-    public string MaLop { get; set; } = string.Empty;
+    {
+        [Column("ma_lop")] public string MaLop { get; set; } = string.Empty;
+        [Column("ma_mon_hoc")] public string MaMonHoc { get; set; } = string.Empty;
+        [Column("ten_mon_hoc")] public string TenMonHoc { get; set; } = string.Empty;
+        [Column("so_tin_chi")] public int SoTinChi { get; set; }
+        [Column("ma_giang_vien")] public string MaGiangVien { get; set; } = string.Empty;
+    }
 
-    [Column("ma_mon_hoc")]
-    public string MaMonHoc { get; set; } = string.Empty;
+    public class PrerequisiteDto
+    {
+        [Column("ma_mon_hoc_dieu_kien")] public string MaMonHocDieuKien { get; set; } = string.Empty;
+        [Column("ten_mon_hoc")] public string TenMonHoc { get; set; } = string.Empty;
+    }
 
-    [Column("ten_mon_hoc")]
-    public string TenMonHoc { get; set; } = string.Empty;
+    public class ConductTotal
+    {
+        [Column("mssv")] public int Mssv { get; set; }
+        [Column("tong_diem_ren_luyen")] public decimal TongDiemRenLuyen { get; set; }
+    }
 
-    [Column("so_tin_chi")]
-    public int SoTinChi { get; set; }
-
-    [Column("ma_giang_vien")]
-    public string MaGiangVien { get; set; } = string.Empty;
-}
-
-public class PrerequisiteDto
-{
-    [Column("ma_mon_hoc_dieu_kien")]
-    public string MaMonHocDieuKien { get; set; } = string.Empty;
-
-    [Column("ten_mon_hoc")]
-    public string TenMonHoc { get; set; } = string.Empty;
-}
-
-public class ConductTotal
-{
-
-    [Column("mssv")]
-    public int Mssv { get; set; }
-    [Column("tong_diem_ren_luyen")]
-    public decimal TongDiemRenLuyen { get; set; }
-}
-
-public class ConductDetail
-{
-    [Column("ma_hoat_dong")]
-    public int MaHoatDong { get; set; }
-
-    [Column("ten_hoat_dong")]
-    public string TenHoatDong { get; set; } = string.Empty;
-
-    [Column("ma_tieu_chi")]
-    public string MaTieuChi { get; set; } = string.Empty;
-
-    [Column("ten_tieu_chi")]
-    public string TenTieuChi { get; set; } = string.Empty;
-
-    [Column("he_so_tham_gia")]
-    public int HeSoThamGia { get; set; }
-
-    [Column("diem")]
-    public int Diem { get; set; }
-
-    [Column("tong_diem")]
-    public int TongDiem { get; set; }
-
-    [Column("ghi_chu")]
-    public string? GhiChu { get; set; }
-}
+    public class ConductDetail
+    {
+        [Column("ma_hoat_dong")] public int MaHoatDong { get; set; }
+        [Column("ten_hoat_dong")] public string TenHoatDong { get; set; } = string.Empty;
+        [Column("ma_tieu_chi")] public string MaTieuChi { get; set; } = string.Empty;
+        [Column("ten_tieu_chi")] public string TenTieuChi { get; set; } = string.Empty;
+        [Column("he_so_tham_gia")] public int HeSoThamGia { get; set; }
+        [Column("diem")] public int Diem { get; set; }
+        [Column("tong_diem")] public int TongDiem { get; set; }
+        [Column("ghi_chu")] public string? GhiChu { get; set; }
+    }
 
 public class PersonalSchedule
+
 {
+
     [Column("ngay")]
+
     public DateTime Ngay { get; set; }
+
     [Column("noi_dung")]
+
     public string NoiDung { get; set; } = string.Empty;
+
     [Column("ghi_chu")]
+
     public string? GhiChu { get; set; }
+
 }
 
 
@@ -327,7 +254,6 @@ public class PersonalSchedule
         return Ok(dto);
     }
 
-    // GET: api/students/card
     [HttpGet("card")]
     public async Task<ActionResult<StudentCardDto>> GetStudentCard()
     {
@@ -407,7 +333,7 @@ public class PersonalSchedule
             DiemTongKet = r.DiemTongKet
         }).ToList();
 
-        return Ok(academicResults);
+        return Ok(dtos);
     }
 
     [HttpGet("schedule/{hocKy}")]
@@ -604,7 +530,6 @@ public async Task<ActionResult<IEnumerable<RegisteredCourseDto>>> GetRegisteredC
 
     if (!coursesQuery.Any()) return NoContent();
 
-    // Map sang DTO public nếu muốn tách lớp private/public
     var courses = coursesQuery.Select(c => new RegisteredCourseDto
     {
         MaLop = c.MaLop,
@@ -731,5 +656,5 @@ public async Task<IActionResult> UpdatePersonalSchedule([FromBody] PersonalSched
     return Ok(new { message = "Cập nhật lịch cá nhân thành công" });
 }
 
-
 }
+
