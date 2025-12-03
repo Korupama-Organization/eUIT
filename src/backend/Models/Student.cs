@@ -254,4 +254,8 @@ public class Student
     /// Ảnh thẻ URL
     /// </summary>
     public string? AnhTheUrl { get; set; } = string.Empty;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 1ec7209cfc1b816af324f937ce3c21b6c6c60fb9

@@ -24,10 +24,15 @@ FROM 'D:\eUIT\scripts\database\main_data\thoi_khoa_bieu.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ',', ENCODING 'UTF8');
 
  copy thoi_khoa_bieu
+<<<<<<< HEAD
 FROM 'D:\eUIT-master\eUIT-master\scripts\database\main_data\kq_dkhp_with_gv.csv'
 WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8');
 
 
+=======
+FROM 'D:\eUIT\scripts\database\main_data\kq_dkhp_with_gv.csv'
+WITH (FORMAT csv, HEADER true, DELIMITER ';', ENCODING 'UTF8')
+>>>>>>> 1ec7209cfc1b816af324f937ce3c21b6c6c60fb9
 
     copy bang_diem
     FROM 'D:\eUIT\scripts\database\main_data\bang_diem.csv'
