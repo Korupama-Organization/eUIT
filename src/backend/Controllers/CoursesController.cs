@@ -1,9 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using eUIT.API.Data;
 using eUIT.API.DTOs;
-using eUIT.API.Models;
 
 namespace eUIT.API.Controllers;
 
