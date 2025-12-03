@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using eUIT.API.Data;
 using eUIT.API.DTOs;
 using System.Security.Claims;
-using System.ComponentModel.DataAnnotations.Schema; // Thêm thư viện này
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eUIT.API.Controllers;
 
-[Authorize] // Yêu cầu tất cả các API trong controller này đều phải được xác thực
+[Authorize]
 [ApiController]
-[Route("api/[controller]")] // Đường dẫn sẽ là /api/students
+[Route("api/[controller]")]
 public class StudentsController : ControllerBase
 {
     private readonly eUITDbContext _context;
@@ -20,11 +20,6 @@ public class StudentsController : ControllerBase
         _context = context;
     }
 
-    // --- Các lớp Model/Kết quả truy vấn nội bộ (Internal Query Result Classes) ---
-    // Các lớp này ánh xạ tới kết quả trả về từ hàm SQL trong database (thường là snake_case)
-    // Các thuộc tính trong lớp này được đổi thành PascalCase để đồng nhất với DTO và sử dụng [Column] để chỉ định tên cột DB tương ứng.
-
-    // Dùng để ánh xạ kết quả từ func_get_next_class
     private class NextClassInfo
     {
         [Column("ma_lop")]
@@ -45,7 +40,6 @@ public class StudentsController : ControllerBase
         public string TenGiangVien { get; set; } = string.Empty;
     }
 
-    // Dùng để ánh xạ kết quả từ func_get_student_card_info
     private class CardInfoResult
     {
         [Column("mssv")]
@@ -60,23 +54,16 @@ public class StudentsController : ControllerBase
         public string? AnhTheUrl { get; set; }
     }
 
-    // Dùng để ánh xạ kết quả từ func_calculate_gpa
     private class QuickGpaResult
     {
-        // Chú ý: Dữ liệu mẫu Swagger cho thấy tên cột là "gpa" và "soTinChiTichLuy"
-        // 
-        [Column("gpa")] 
+        [Column("gpa")]
         public float Gpa { get; set; }
         [Column("so_tin_chi_tich_luy")]
         public int SoTinChiTichLuy { get; set; } = 0;
     }
 
-    // Dùng để ánh xạ kết quả từ chi_tiet_ket_qua_hoc_tap
     private class AcademicResultQueryResult
     {
-        // 
-
-
         [Column("hoc_ky")]
         public string? HocKy { get; set; }
         [Column("ma_mon_hoc")]
@@ -316,120 +303,88 @@ public class PersonalSchedule
     public async Task<ActionResult<NextClassDto>> GetNextClass()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (loggedInMssv == null) return Forbid();
-
         if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
 
-        var NextClassResult = await
-        _context.Database.SqlQuery<NextClassInfo>
-        ($"SELECT * FROM func_get_next_class({mssvInt})")
-        .FirstOrDefaultAsync();
+        var nextClassResult = await _context.Database.SqlQuery<NextClassInfo>(
+            $"SELECT * FROM func_get_next_class({mssvInt})")
+            .FirstOrDefaultAsync();
 
-        if (NextClassResult == null) return NoContent();
+        if (nextClassResult == null) return NoContent();
 
-        // Ánh xạ từ Query Result sang DTO
-        var NextClass = new NextClassDto
+        var dto = new NextClassDto
         {
-            MaLop = NextClassResult.MaLop,
-            TenLop = NextClassResult.TenMonHocVn,
-            Thu = NextClassResult.Thu,
-            TietBatDau = NextClassResult.TietBatDau,
-            TietKetThuc = NextClassResult.TietKetThuc,
-            PhongHoc = NextClassResult.PhongHoc,
-            NgayHoc = NextClassResult.NgayHoc,
-            TenGiangVien = NextClassResult.TenGiangVien
+            MaLop = nextClassResult.MaLop,
+            TenLop = nextClassResult.TenMonHocVn,
+            Thu = nextClassResult.Thu,
+            TietBatDau = nextClassResult.TietBatDau,
+            TietKetThuc = nextClassResult.TietKetThuc,
+            PhongHoc = nextClassResult.PhongHoc,
+            NgayHoc = nextClassResult.NgayHoc,
+            TenGiangVien = nextClassResult.TenGiangVien
         };
 
-        return Ok(NextClass);
+        return Ok(dto);
     }
 
-    // GET: api/students/card
     [HttpGet("card")]
     public async Task<ActionResult<StudentCardDto>> GetStudentCard()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (loggedInMssv == null) return Forbid();
-
         if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
 
-        var student = await
-            _context.Database.SqlQuery<CardInfoResult>(
+        var student = await _context.Database.SqlQuery<CardInfoResult>(
             $"SELECT * FROM func_get_student_card_info({mssvInt})")
             .FirstOrDefaultAsync();
 
         if (student == null) return NotFound();
 
-        string? avatarFullUrl = null;
-        if (!string.IsNullOrEmpty(student.AnhTheUrl))
-        {
-            // Xây dựng URL đầy đủ cho ảnh thẻ
-            var baseUrl = $"{Request.Scheme}://{Request.Host}";
-            avatarFullUrl = $"{baseUrl}/files/{student.AnhTheUrl}"; 
-        }
-
-        // Ánh xạ từ Query Result sang DTO
-        var studentCard = new StudentCardDto
+        var baseUrl = $"{Request.Scheme}://{Request.Host}";
+        var dto = new StudentCardDto
         {
             Mssv = student.Mssv,
             HoTen = student.HoTen,
             KhoaHoc = student.KhoaHoc,
             NganhHoc = student.NganhHoc,
-            AvatarFullUrl = avatarFullUrl
+            AvatarFullUrl = !string.IsNullOrEmpty(student.AnhTheUrl) 
+                ? $"{baseUrl}/files/{student.AnhTheUrl}" 
+                : null
         };
 
-        return Ok(studentCard);
+        return Ok(dto);
     }
 
-    /// <summary>
-    /// Retrieves the quick GPA and accumulated credits for the currently authenticated student.
-    /// </summary>
-    // GET: /quickgpa
     [HttpGet("quickgpa")]
     public async Task<ActionResult<QuickGpaDto>> GetQuickGpa()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-        if (loggedInMssv == null) return Forbid();
-
         if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
 
-        var result = await
-            _context.Database.SqlQuery<QuickGpaResult>(
+        var result = await _context.Database.SqlQuery<QuickGpaResult>(
             $"SELECT * FROM func_calculate_gpa({mssvInt})")
             .FirstOrDefaultAsync();
 
         if (result == null) return NotFound();
 
-        // Ánh xạ từ Query Result sang DTO
-        var gpaAndCredits = new QuickGpaDto
+        return Ok(new QuickGpaDto
         {
             Gpa = result.Gpa,
             SoTinChiTichLuy = result.SoTinChiTichLuy
-        };
-
-        return Ok(gpaAndCredits);
+        });
     }
 
-
-    // GET: /academicresults
     [HttpGet("academicresults")]
     public async Task<ActionResult<IEnumerable<AcademicResultDTO>>> GetAcademicResults()
     {
         var loggedInMssv = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (loggedInMssv == null) return Forbid();
-
         if (!int.TryParse(loggedInMssv, out int mssvInt)) return Forbid();
 
-        // Gọi hàm database để lấy chi tiết kết quả học tập
-        var queryResults = await _context.Database.SqlQuery<AcademicResultQueryResult>
-            ($"SELECT * FROM chi_tiet_ket_qua_hoc_tap({mssvInt})")
+        var queryResults = await _context.Database.SqlQuery<AcademicResultQueryResult>(
+            $"SELECT * FROM chi_tiet_ket_qua_hoc_tap({mssvInt})")
             .ToListAsync();
 
-        if (queryResults == null || queryResults.Count == 0) 
-            return NotFound("No academic results found");
+        if (!queryResults.Any()) return NotFound();
 
-        // Chuyển đổi từ query result sang DTO
-        var academicResults = queryResults.Select(r => new AcademicResultDTO
+        var dtos = queryResults.Select(r => new AcademicResultDTO
         {
             HocKy = r.HocKy ?? string.Empty,
             MaMonHoc = r.MaMonHoc ?? string.Empty,
