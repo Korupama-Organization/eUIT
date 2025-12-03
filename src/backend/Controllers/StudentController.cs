@@ -8,9 +8,9 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eUIT.API.Controllers;
 
-[Authorize]
+[Authorize] // Yêu cầu tất cả các API trong controller này đều phải được xác thực
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/[controller]")] // Đường dẫn sẽ là /api/students
 public class StudentsController : ControllerBase
 {
     private readonly eUITDbContext _context;
@@ -298,6 +298,7 @@ public class PersonalSchedule
 
 
     //--- API Endpoints ---
+    // GET: api/students/nextclass
 
     [HttpGet("nextclass")]
     public async Task<ActionResult<NextClassDto>> GetNextClass()
@@ -326,6 +327,7 @@ public class PersonalSchedule
         return Ok(dto);
     }
 
+    // GET: api/students/card
     [HttpGet("card")]
     public async Task<ActionResult<StudentCardDto>> GetStudentCard()
     {
@@ -353,6 +355,9 @@ public class PersonalSchedule
         return Ok(dto);
     }
 
+    /// <summary>
+    /// Retrieves the quick GPA and accumulated credits for the currently authenticated student.
+    /// </summary>
     [HttpGet("quickgpa")]
     public async Task<ActionResult<QuickGpaDto>> GetQuickGpa()
     {
@@ -372,6 +377,7 @@ public class PersonalSchedule
         });
     }
 
+    // GET: api/students/academicresults
     [HttpGet("academicresults")]
     public async Task<ActionResult<IEnumerable<AcademicResultDTO>>> GetAcademicResults()
     {
