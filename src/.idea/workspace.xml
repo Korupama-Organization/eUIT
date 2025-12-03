@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="718751f3-59bb-44aa-b424-09babc177943" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../scripts/database/main_data/bang_diem_yeu_cau.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../scripts/database/main_data/dang_ky_gui_xe.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../scripts/database/main_data/giay_gioi_thieu.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../scripts/database/main_data/gxn_sinh_vien.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../scripts/database/main_data/phuc_khao.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../scripts/database/main_data/xac_nhan_chung_chi.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../scripts/database/sql/fix_services.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../scripts/database/sql/service_tables.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../scripts/database/sql/settings_tables.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../scripts/database/sql/sync_sequences.sql" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/Controllers/ServicesController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/Controllers/SettingsController.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/CertificateConfirmationDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/Create/CertificateConfirmationCreateDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/Create/IntroductionLetterCreateDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/Create/ParkingRegistrationCreateDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/Create/ReExamCreateDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/Create/StudentConfirmationCreateDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/Create/TranscriptRequestCreateDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/Create/UpdateUserSettingsDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/IntroductionLetterDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/ParkingRegistrationDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/ReExamDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/StudentConfirmationDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/TranscriptRequestDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/DTOs/UserSettingsDto.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/features/auth/screens/LookupScreen.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/features/auth/screens/ScheduleScreen.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/features/auth/screens/ServicesScreen.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/features/auth/screens/SettingsScreen.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/features/navigation/AppNavigator.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/features/navigation/MainTabNavigator.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/theme/ThemeProvider.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mobile/theme/theme.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scripts/database/main_data/giang_vien.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../scripts/database/main_data/giang_vien.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scripts/database/main_data/sinh_vien.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../scripts/database/main_data/sinh_vien.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scripts/database/other_data/ket_qua_hoc_tap_mau.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../scripts/database/other_data/ket_qua_hoc_tap_mau.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scripts/database/other_data/ket_qua_hoc_tap_mau_expanded.csv" beforeDir="false" afterPath="$PROJECT_DIR$/../scripts/database/other_data/ket_qua_hoc_tap_mau_expanded.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scripts/database/sql/create_database.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../scripts/database/sql/create_database.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scripts/database/sql/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../scripts/database/sql/init.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../scripts/database/sql/qldt.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../scripts/database/sql/qldt.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Controllers/StudentController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Controllers/StudentController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Data/eUITDbContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Data/eUITDbContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Services/TokenService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Services/TokenService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/app.json" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/app.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/babel.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/babel.config.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/features/auth/api/authAPI.js" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/features/auth/api/authAPI.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/features/auth/screens/HomeScreen.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/features/auth/screens/LoginScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/features/auth/screens/LoginScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/features/students/screens/AcademicResultScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/features/students/screens/AcademicResultScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/features/students/screens/LookupScreen.js" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/features/students/screens/LookupScreen.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mobile/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/mobile/package.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 3
+}</component>
+  <component name="ProjectId" id="34dvm1z9s1YgGEIekksAmq9ZC27" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.readMode.enableVisualFormatting": "true",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "Merging feature/Loi",
+    "last_opened_file_path": "D:/eUIT-master/eUIT-master/src",
+    "settings.editor.selected.configurable": "com.android.studio.ml.bot.mainConfigurable"
+  }
+}]]></component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="718751f3-59bb-44aa-b424-09babc177943" name="Changes" comment="" />
+      <created>1761556418459</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1761556418459</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
+  </component>
+</project>

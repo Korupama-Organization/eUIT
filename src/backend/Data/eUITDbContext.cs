@@ -15,6 +15,10 @@ public class eUITDbContext : DbContext
     public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     /// <summary>
+    /// DbSet cho quản lý Môn học
+    /// </summary>
+    public DbSet<Courses> Courses { get; set; }
+    /// <summary>
     /// DbSet cho quản lý Báo nghỉ dạy của Giảng viên
     /// </summary>
     public DbSet<Absence> bao_nghi_day { get; set; }

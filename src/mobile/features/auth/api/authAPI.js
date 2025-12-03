@@ -185,7 +185,6 @@ export const login = async (credentials) => {
     } else if (!error.status) {
       throw { ...error, message: AUTH_ERRORS.NETWORK_ERROR };
     }
-
     throw error;
   }
 };
@@ -229,7 +228,6 @@ export const refreshToken = async () => {
       await clearTokens();
       throw { ...error, message: AUTH_ERRORS.TOKEN_EXPIRED };
     }
-
     throw error;
   }
 };
@@ -259,7 +257,6 @@ export const getProfile = async () => {
         throw { ...refreshError, message: AUTH_ERRORS.TOKEN_EXPIRED };
       }
     }
-
     throw error;
   }
 };

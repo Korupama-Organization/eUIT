@@ -9,6 +9,8 @@
 -- ---------------------------------------------------------------------------------
 LANGUAGE plpgsql;
 
+drop Function func_get_next_class(p_mssv int)
+
 CREATE OR REPLACE FUNCTION func_get_next_class(
     p_mssv INT
 )
