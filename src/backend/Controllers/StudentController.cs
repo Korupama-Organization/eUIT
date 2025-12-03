@@ -343,7 +343,7 @@ public class PersonalSchedule
         return Ok(NextClass);
     }
 
-    // GET: /card
+    // GET: api/students/card
     [HttpGet("card")]
     public async Task<ActionResult<StudentCardDto>> GetStudentCard()
     {
